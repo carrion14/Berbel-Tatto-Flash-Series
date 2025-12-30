@@ -192,14 +192,14 @@
             { id: 14, nombre: "Dragon Ball", cat: "anime", img: "./img/014.png", pass: "A-DB07" },
             { id: 15, nombre: "Kitsune", cat: "anime", img: "./img/015.png", pass: "A-KI91" },
             { id: 16, nombre: "One Piece", cat: "anime", img: "./img/016.png", pass: "A-OP10" },
-            { id: 17, nombre: "Rey León", cat: "disney", img: "./img/017.png", pass: "D-RL30" },
+            { id: 17, nombre: "Simba", cat: "disney", img: "./img/017.png", pass: "D-RL30" },
             { id: 18, nombre: "Mickey", cat: "disney", img: "./img/018.png", pass: "D-MK01" },
             { id: 19, nombre: "Totoro", cat: "disney", img: "./img/019.png", pass: "D-TO44" },
-            { id: 20, nombre: "La Rosa", cat: "disney", img: "./img/020.png", pass: "D-RS22" },
+            { id: 20, nombre: "La Bella y la bestia", cat: "disney", img: "./img/020.png", pass: "D-RS22" },
             { id: 21, nombre: "Campanilla", cat: "disney", img: "./img/021.png", pass: "D-CP88" },
-            { id: 22, nombre: "Stitch", cat: "disney", img: "./img/022.png", pass: "D-ST66" },
-            { id: 23, nombre: "Alicia", cat: "disney", img: "./img/023.png", pass: "D-AL99" },
-            { id: 24, nombre: "Castillo", cat: "disney", img: "./img/024.png", pass: "D-CS00" }
+            { id: 22, nombre: "Toy Story", cat: "disney", img: "./img/022.png", pass: "D-ST66" },
+            { id: 23, nombre: "Tiguer", cat: "disney", img: "./img/023.png", pass: "D-AL99" },
+            { id: 24, nombre: "Stitch", cat: "disney", img: "./img/024.png", pass: "D-CS00" }
         ];
 
         let tattoos = [...staticData.map(t => ({...t, estado: 'disponible', precio: 130}))];
@@ -353,4 +353,5 @@
         function copiarMensaje() { navigator.clipboard.writeText(mensajeActual).then(() => { document.getElementById('btn-copiar').innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> <span>¡Copiado!</span>`; lucide.createIcons(); }); }
     </script>
 </body>
+
 </html>
