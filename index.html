@@ -7,7 +7,6 @@
     <title>Berbel Tattoo Studio | Diseños Únicos y Exclusivos</title>
     <meta name="description" content="Reserva tu diseño de tatuaje único en Berbel Tattoo. Catálogo en tiempo real de estilo Marvel, Anime, Disney y más. Gana Jimmy Coins con tus reservas.">
     <meta name="keywords" content="tatuajes, tattoo, marvel, anime, disney, estudio de tatuajes, reservar tatuaje, granollers, barcelona">
-    <link rel="canonical" href="https://tusitio.com/">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -87,8 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div id="grid-tattoos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                </div>
+            <div id="grid-tattoos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"></div>
         </section>
 
         <section id="vista-videos" class="hidden fade-in">
@@ -151,38 +149,38 @@
         </section>
 
         <div id="modal-perfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4 fade-in">
-        <div class="bg-zinc-950 border border-zinc-800 w-full max-w-sm shadow-2xl rounded-sm overflow-hidden">
-            <div class="bg-gradient-to-br from-red-900 to-black p-6 flex flex-col items-center justify-center relative border-b border-red-600/30">
-                <button onclick="cerrarModal('modal-perfil')" class="absolute top-4 right-4 text-white hover:scale-110 transition-transform"><i data-lucide="x" class="w-5 h-5"></i></button>
-                <img id="perfil-modal-pic" src="" class="w-20 h-20 rounded-full border-4 border-black shadow-xl mb-3">
-                <h3 id="perfil-modal-nombre" class="text-xl font-black text-white uppercase italic tracking-wider">Nombre</h3>
-                <p id="perfil-modal-email" class="text-xs text-zinc-400 font-mono">email@ejemplo.com</p>
-            </div>
-            
-            <div class="p-6 md:p-8 text-center bg-black">
-                <p class="text-[10px] text-zinc-500 font-black tracking-[0.3em] uppercase mb-2">Tu Billetera</p>
-                <div class="flex items-baseline justify-center gap-2 mb-6">
-                    <span id="perfil-modal-coins" class="text-5xl font-black text-red-600 italic">0</span>
-                    <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest">Coins</span>
+            <div class="bg-zinc-950 border border-zinc-800 w-full max-w-sm shadow-2xl rounded-sm overflow-hidden">
+                <div class="bg-gradient-to-br from-red-900 to-black p-6 flex flex-col items-center justify-center relative border-b border-red-600/30">
+                    <button onclick="cerrarModal('modal-perfil')" class="absolute top-4 right-4 text-white hover:scale-110 transition-transform"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <img id="perfil-modal-pic" src="" class="w-20 h-20 rounded-full border-4 border-black shadow-xl mb-3">
+                    <h3 id="perfil-modal-nombre" class="text-xl font-black text-white uppercase italic tracking-wider">Nombre</h3>
+                    <p id="perfil-modal-email" class="text-xs text-zinc-400 font-mono">email@ejemplo.com</p>
                 </div>
                 
-                <div class="bg-zinc-900 border border-zinc-800 p-4 text-left relative overflow-hidden group">
-                    <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2 uppercase tracking-widest">
-                        <span>Progreso Descuento</span>
-                        <span id="perfil-progreso-texto">0 / 400</span>
+                <div class="p-6 md:p-8 text-center bg-black">
+                    <p class="text-[10px] text-zinc-500 font-black tracking-[0.3em] uppercase mb-2">Tu Billetera</p>
+                    <div class="flex items-baseline justify-center gap-2 mb-6">
+                        <span id="perfil-modal-coins" class="text-5xl font-black text-red-600 italic">0</span>
+                        <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest">Coins</span>
                     </div>
-                    <div class="w-full bg-black h-2 rounded-full overflow-hidden border border-zinc-800">
-                        <div id="perfil-barra" class="bg-red-600 h-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.8)]" style="width: 0%"></div>
+                    
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 text-left relative overflow-hidden group">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2 uppercase tracking-widest">
+                            <span>Progreso Descuento</span>
+                            <span id="perfil-progreso-texto">0 / 400</span>
+                        </div>
+                        <div class="w-full bg-black h-2 rounded-full overflow-hidden border border-zinc-800">
+                            <div id="perfil-barra" class="bg-red-600 h-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.8)]" style="width: 0%"></div>
+                        </div>
+                        <p class="text-[9px] text-zinc-500 mt-3 italic text-center">Llega a 400 monedas y obtén un 20% OFF en tu próximo tattoo.</p>
                     </div>
-                    <p class="text-[9px] text-zinc-500 mt-3 italic text-center">Llega a 400 monedas y obtén un 20% OFF en tu próximo tattoo.</p>
                 </div>
+                
+                <button onclick="logoutGoogle()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold py-4 uppercase text-xs transition-all flex items-center justify-center gap-2 border-t border-zinc-800 tracking-widest">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> <span>Cerrar Sesión</span>
+                </button>
             </div>
-            
-            <button onclick="logoutGoogle()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold py-4 uppercase text-xs transition-all flex items-center justify-center gap-2 border-t border-zinc-800 tracking-widest">
-                <i data-lucide="log-out" class="w-4 h-4"></i> <span>Cerrar Sesión</span>
-            </button>
         </div>
-    </div>
     </main>
 
     <footer class="border-t border-zinc-900 py-12 bg-black text-center mt-auto">

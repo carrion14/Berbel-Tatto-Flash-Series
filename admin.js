@@ -1,4 +1,4 @@
-// --- CONFIGURACIÓN DE FIREBASE (Es la misma) ---
+// --- CONFIGURACIÓN DE FIREBASE ---
 const firebaseConfig = {
     apiKey: "AIzaSyAlAUnyCLOnTCMJoW3Ruix17gNDqAdzUhM",
     authDomain: "berbeltattoo.firebaseapp.com",
@@ -12,7 +12,7 @@ let db = null;
 let usuariosData = [];
 let videosData = [];
 
-// Base de datos de tatuajes estática para pintar el grid
+// Base de datos estática
 const staticData = [
     { id: 1, nombre: "Thanos", img: "./img/001.png" }, { id: 2, nombre: "Iron Man", img: "./img/002.png" },
     { id: 3, nombre: "Loki", img: "./img/003.png" }, { id: 4, nombre: "Spiderman", img: "./img/004.png" },
@@ -34,23 +34,21 @@ window.onload = function() {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     
-    // SISTEMA DE SEGURIDAD (Guardián de la Puerta)
+    // SISTEMA DE SEGURIDAD
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-            // Verificar si es admin
             db.collection('usuarios').doc(user.uid).get().then(doc => {
                 if (doc.exists && doc.data().rol === 'admin') {
-                    // ¡Es el jefe! Quitamos la pantalla de bloqueo
                     document.getElementById('pantalla-bloqueo').classList.add('hidden');
                     iniciarPanel();
                 } else {
-                    // Está logueado pero no es admin
                     document.getElementById('error-acceso').classList.remove('hidden');
                     document.getElementById('btn-volver').classList.remove('hidden');
                 }
+            }).catch(error => {
+                console.error("Error validando admin:", error);
             });
         } else {
-            // Ni siquiera está logueado
             document.getElementById('error-acceso').innerText = "NO HAY SESIÓN ACTIVA.";
             document.getElementById('error-acceso').classList.remove('hidden');
             document.getElementById('btn-volver').classList.remove('hidden');
@@ -59,14 +57,12 @@ window.onload = function() {
 };
 
 function iniciarPanel() {
-    // 1. Escuchar Usuarios
     db.collection('usuarios').onSnapshot(snapshot => {
         usuariosData = [];
         snapshot.forEach(doc => usuariosData.push({ uid: doc.id, ...doc.data() }));
         renderizarUsuarios();
     });
 
-    // 2. Escuchar Inventario de Tatuajes
     db.collection('inventario').doc('main').onSnapshot(doc => {
         if (doc.exists) {
             tattoosCloud = doc.data();
@@ -74,7 +70,6 @@ function iniciarPanel() {
         }
     });
 
-    // 3. Escuchar Videos
     db.collection('videos').orderBy('fecha', 'desc').onSnapshot(snapshot => {
         videosData = [];
         snapshot.forEach(doc => videosData.push({ id: doc.id, ...doc.data() }));
@@ -82,7 +77,6 @@ function iniciarPanel() {
     });
 }
 
-// --- NAVEGACIÓN TABS ---
 function cambiarTab(tab) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
     document.getElementById(`tab-${tab}`).classList.remove('hidden');
@@ -93,7 +87,6 @@ function cambiarTab(tab) {
     });
 }
 
-// --- GESTIÓN DE USUARIOS Y MONEDAS ---
 function renderizarUsuarios() {
     const tbody = document.getElementById('lista-usuarios');
     const search = document.getElementById('buscador-usuarios').value.toLowerCase();
@@ -108,7 +101,6 @@ function renderizarUsuarios() {
         const isJefe = u.rol === 'admin';
         const monedas = u.jimmyCoins || 0;
         
-        // Generar etiquetas con los premios de la ruleta que le han tocado
         let premiosHTML = '';
         if (u.ruleta) {
             for (const [categoria, premio] of Object.entries(u.ruleta)) {
@@ -158,7 +150,6 @@ function cambiarMonedasCustom(uid) {
     }
 }
 
-// --- GESTIÓN DE TATUAJES (Inventario) ---
 function renderizarTatuajesAdmin() {
     const grid = document.getElementById('grid-admin-tattoos');
     grid.innerHTML = '';
@@ -197,7 +188,6 @@ function toggleEstadoTattoo(id, estadoActual) {
     }, { merge: true });
 }
 
-// --- GESTIÓN DE VIDEOS ---
 function guardarVideo(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button');

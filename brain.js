@@ -12,8 +12,9 @@ const firebaseConfig = {
 let db = null;
 let currentUser = null;
 let userData = null;
+let unsubscribeUser = null; // Variable para limpiar la conexión a la base de datos
 
-// DATOS ESTÁTICOS DE TATUAJES (Mantenemos tu base)
+// DATOS ESTÁTICOS DE TATUAJES
 const staticData = [
     { id: 1, nombre: "Thanos", cat: "marvel", img: "./img/001.png", pass: "M-TH82" },
     { id: 2, nombre: "Iron Man", cat: "marvel", img: "./img/002.png", pass: "M-IR99" },
@@ -53,14 +54,19 @@ window.onload = function() {
     db = firebase.firestore();
     
     // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
-    // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
-    // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
     firebase.auth().onAuthStateChanged(user => {
+        
+        // Limpiamos la conexión a la base de datos anterior si existía
+        if (unsubscribeUser) {
+            unsubscribeUser();
+            unsubscribeUser = null;
+        }
+
         if (user) {
             // PARCHE: Si es una sesión anónima vieja, la cerramos a la fuerza
             if (user.isAnonymous) {
                 firebase.auth().signOut();
-                return; // Cortamos la ejecución aquí
+                return; 
             }
 
             currentUser = user;
@@ -75,7 +81,7 @@ window.onload = function() {
             document.getElementById('user-pic').src = fotoMostrar;
             
             // Escuchar los datos del usuario (Monedas) en tiempo real
-            db.collection('usuarios').doc(user.uid).onSnapshot(doc => {
+            unsubscribeUser = db.collection('usuarios').doc(user.uid).onSnapshot(doc => {
                 if (doc.exists) {
                     userData = doc.data();
                     document.getElementById('user-coins').innerText = userData.jimmyCoins || 0;
@@ -97,11 +103,9 @@ window.onload = function() {
             userData = null;
             document.getElementById('btn-login').classList.remove('hidden');
             document.getElementById('user-info').classList.add('hidden');
-            actualizarEstadoBotonesRandom(); // Para resetear los botones de la ruleta
+            actualizarEstadoBotonesRandom(); 
         }
     });
-
-    
 
     // 2. SINCRONIZAR INVENTARIO DE TATUAJES
     const docRef = db.collection('inventario').doc('main');
@@ -135,15 +139,16 @@ window.onload = function() {
 function loginGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider).catch(error => {
-        console.error("Error Auth:", error);
-        alert("Hubo un error al iniciar sesión.");
+        console.error("Error Auth detallado:", error);
+        alert("Error al iniciar sesión:\n\n" + error.message + "\n\n(Asegúrate de haber añadido la URL de tu web en Firebase > Authentication > Settings > Dominios Autorizados)");
     });
 }
 
 function logoutGoogle() {
     firebase.auth().signOut().then(() => {
-        cerrarModal('modal-perfil'); // Cierra el modal si estaba abierto
-        alert("Has cerrado sesión correctamente."); // Opcional
+        cerrarModal('modal-perfil');
+    }).catch(error => {
+        console.error("Error al cerrar sesión:", error);
     });
 }
 
@@ -194,7 +199,6 @@ function renderizarVideos() {
     }
 
     videos.forEach(v => {
-        // Soporta enlaces directos MP4 o iFrames de YouTube
         let mediaHTML = '';
         if(v.url.includes('youtube') || v.url.includes('youtu.be') || v.url.includes('<iframe')) {
             mediaHTML = v.url.includes('<iframe') ? v.url : `<iframe class="w-full h-full object-cover" src="${v.url.replace('watch?v=', 'embed/')}" frameborder="0" allowfullscreen></iframe>`;
@@ -217,7 +221,6 @@ function renderizarVideos() {
 
 // --- NAVEGACIÓN Y FILTROS ---
 function cambiarVista(v) {
-    // NUEVO: Bloqueo de seguridad para la ruleta
     if (v === 'random' && !currentUser) {
         alert("Para jugar a la ruleta y guardar tus premios debes iniciar sesión primero.");
         loginGoogle();
@@ -228,7 +231,6 @@ function cambiarVista(v) {
     document.getElementById('vista-videos').className = v === 'videos' ? 'fade-in' : 'hidden'; 
     document.getElementById('vista-random').className = v === 'random' ? 'fade-in' : 'hidden';
     
-    // Botones Nav
     const btnActivo = 'px-3 md:px-6 py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider transition-all text-white bg-red-700 shadow-lg whitespace-nowrap';
     const btnInactivo = 'px-3 md:px-6 py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider transition-all text-zinc-400 hover:text-white hover:bg-zinc-800 whitespace-nowrap';
     
@@ -251,12 +253,10 @@ function filtrarCategoria(c) {
     renderizarCatalogo(); 
 }
 
-
-// --- RULETA (CONECTADA A FIREBASE) ---
+// --- RULETA ---
 function manejarClickRuleta(modo) {
     const key = modo === 'all' ? 'all' : catRandomSelect;
     
-    // Comprobamos en Firebase si ya ha jugado esta sección
     if(userData && userData.ruleta && userData.ruleta[key]) { 
         const d = userData.ruleta[key];
         mostrarResultado(d.id, d.precio, d.pass); 
@@ -278,10 +278,9 @@ function iniciarRuleta(modo) {
         const p = modo === 'all' ? 80 : 100;
         const key = modo === 'all' ? 'all' : catRandomSelect;
         
-        // GUARDAMOS EL RESULTADO EN FIREBASE, NO EN LOCALSTORAGE
         db.collection('usuarios').doc(currentUser.uid).set({
             ruleta: {
-                [key]: { id: g.id, precio: p, pass: g.pass, nombre: g.nombre } // Guardamos el nombre para que el Admin lo vea fácil
+                [key]: { id: g.id, precio: p, pass: g.pass, nombre: g.nombre } 
             }
         }, { merge: true }).then(() => {
             mostrarResultado(g.id, p, g.pass);
@@ -311,7 +310,6 @@ function mostrarResultado(id, p, pass) {
 function actualizarEstadoBotonesRandom() {
     if (!userData) return;
 
-    // Comprobar Ruleta Rusa (all)
     if(userData.ruleta && userData.ruleta['all']) {
         const btn = document.getElementById('btn-spin-all');
         btn.classList.add('border-green-500');
@@ -332,7 +330,6 @@ function seleccionarCatRandom(c) {
     
     const btn = document.getElementById('btn-spin-cat');
     
-    // Comprobar Ruleta por Categoría
     if(userData && userData.ruleta && userData.ruleta[c]) { 
         btn.innerText = "VER MI PREMIO"; 
         btn.className = "w-full bg-zinc-900 border border-green-500 text-green-500 font-black py-5 rounded tracking-widest transition-all"; 
@@ -349,11 +346,10 @@ function volverMenuRandom() {
     actualizarEstadoBotonesRandom(); 
 }
 
-// --- MODALES ---
+// --- MODALES Y PERFIL ---
 function cerrarModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 function abrirModalReserva(id, n, p, pass) {
-    // Info inteligente: Si tiene Jimmy Coins, se lo decimos en el mensaje a Berbel
     let extraMsg = "";
     if(userData && userData.jimmyCoins > 0) {
         extraMsg = ` Tengo ${userData.jimmyCoins} Jimmy Coins en mi cuenta.`;
@@ -376,24 +372,20 @@ function copiarMensaje() {
     }); 
 }
 
-// --- PERFIL DE USUARIO ---
 function abrirPerfil() {
     if (!currentUser || !userData) return;
     
-    // Llenar datos básicos con protección de errores
     document.getElementById('perfil-modal-pic').src = currentUser.photoURL || './img/logo w.png';
     document.getElementById('perfil-modal-nombre').innerText = currentUser.displayName || 'Usuario';
     document.getElementById('perfil-modal-email').innerText = currentUser.email || '';
     document.getElementById('perfil-modal-coins').innerText = userData.jimmyCoins || 0;
     
-    // Calcular barra de progreso (cada 400 monedas)
     const monedas = userData.jimmyCoins || 0;
-    const monedasHaciaMeta = Math.floor(monedas % 400); // Lo que lleva de la meta actual
+    const monedasHaciaMeta = Math.floor(monedas % 400); 
     const porcentaje = (monedasHaciaMeta / 400) * 100;
     
     document.getElementById('perfil-progreso-texto').innerText = `${monedasHaciaMeta} / 400`;
     
-    // Animación de la barra
     setTimeout(() => {
         document.getElementById('perfil-barra').style.width = `${porcentaje}%`;
     }, 100);
