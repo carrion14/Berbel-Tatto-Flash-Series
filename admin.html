@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Bóveda | Admin Berbel Tattoo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 3px; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
+
+    <div id="pantalla-bloqueo" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
+        <i data-lucide="shield-alert" class="w-16 h-16 text-red-600 animate-pulse mb-4"></i>
+        <h2 class="text-2xl font-black uppercase tracking-widest italic">Verificando Acceso...</h2>
+        <p id="error-acceso" class="text-red-500 mt-4 text-sm font-mono hidden">ACCESO DENEGADO. NO ERES ADMINISTRADOR.</p>
+        <button id="btn-volver" onclick="window.location.href='index.html'" class="mt-6 hidden border border-zinc-800 px-6 py-2 text-xs uppercase font-bold text-zinc-400 hover:text-white transition-all">Volver a la web</button>
+    </div>
+
+    <header class="sticky top-0 z-40 bg-zinc-950 border-b border-red-900/30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <i data-lucide="database" class="w-8 h-8 text-red-600"></i>
+                <div>
+                    <h1 class="font-black text-xl italic uppercase tracking-widest text-white">La Bóveda</h1>
+                    <p class="text-[10px] font-mono text-red-500 tracking-[0.2em]">PANEL DE CONTROL PRO</p>
+                </div>
+            </div>
+            
+            <nav class="flex gap-2 bg-black p-1 rounded border border-zinc-800">
+                <button onclick="cambiarTab('usuarios')" id="tab-btn-usuarios" class="tab-btn px-4 py-2 text-xs font-bold uppercase bg-red-600 text-white transition-all">Usuarios</button>
+                <button onclick="cambiarTab('tatuajes')" id="tab-btn-tatuajes" class="tab-btn px-4 py-2 text-xs font-bold uppercase text-zinc-500 hover:text-white transition-all">Inventario</button>
+                <button onclick="cambiarTab('videos')" id="tab-btn-videos" class="tab-btn px-4 py-2 text-xs font-bold uppercase text-zinc-500 hover:text-white transition-all">Videos</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+        
+        <section id="tab-usuarios" class="fade-in">
+            <h2 class="text-2xl font-black uppercase italic mb-6 border-b border-zinc-800 pb-2">Gestión de Jimmy Coins</h2>
+            <div class="relative mb-6">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4"></i>
+                <input type="text" id="buscador-usuarios" onkeyup="renderizarUsuarios()" placeholder="Buscar usuario por nombre o email..." class="w-full bg-zinc-900 border border-zinc-800 pl-12 pr-4 py-3 text-sm focus:border-red-600 outline-none text-white font-mono">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-zinc-900 border-b border-zinc-800 text-[10px] uppercase tracking-widest text-zinc-500">
+                            <th class="p-4">Usuario</th>
+                            <th class="p-4">Email y Premios</th> <th class="p-4 text-center">Jimmy Coins</th>
+                            <th class="p-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-usuarios">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tab-tatuajes" class="hidden fade-in">
+            <h2 class="text-2xl font-black uppercase italic mb-6 border-b border-zinc-800 pb-2">Gestión de Tatuajes</h2>
+            <div id="grid-admin-tattoos" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                </div>
+        </section>
+
+        <section id="tab-videos" class="hidden fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded h-fit">
+                    <h3 class="font-black uppercase text-red-500 tracking-widest mb-4"><i data-lucide="plus-square" class="inline w-4 h-4 mr-2"></i>Añadir Nuevo Video</h3>
+                    <form id="form-video" onsubmit="guardarVideo(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">URL del Video (YouTube, MP4)</label>
+                            <input type="text" id="vid-url" required placeholder="https://..." class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">Título</label>
+                            <input type="text" id="vid-titulo" required class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">Descripción (Opcional)</label>
+                            <textarea id="vid-desc" class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none h-20"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-red-600 text-white font-black py-3 uppercase text-xs tracking-widest hover:bg-red-700 transition-all">Publicar Video</button>
+                    </form>
+                </div>
+                <div class="lg:col-span-2">
+                    <h3 class="font-black uppercase text-zinc-500 tracking-widest mb-4">Videos Publicados</h3>
+                    <div id="lista-admin-videos" class="space-y-4">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>
