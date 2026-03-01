@@ -53,25 +53,38 @@ window.onload = function() {
     db = firebase.firestore();
     
     // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
+    // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
+    // 1. SISTEMA DE AUTENTICACIÓN Y JIMMY COINS
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
+            // PARCHE: Si es una sesión anónima vieja, la cerramos a la fuerza
+            if (user.isAnonymous) {
+                firebase.auth().signOut();
+                return; // Cortamos la ejecución aquí
+            }
+
             currentUser = user;
             document.getElementById('btn-login').classList.add('hidden');
             document.getElementById('user-info').classList.remove('hidden');
-            document.getElementById('user-name').innerText = user.displayName.split(' ')[0];
-            document.getElementById('user-pic').src = user.photoURL;
+            
+            // Protección extra por si algún dato de Google tarda en cargar
+            const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : 'Usuario';
+            const fotoMostrar = user.photoURL ? user.photoURL : './img/logo w.png';
+            
+            document.getElementById('user-name').innerText = nombreMostrar;
+            document.getElementById('user-pic').src = fotoMostrar;
             
             // Escuchar los datos del usuario (Monedas) en tiempo real
             db.collection('usuarios').doc(user.uid).onSnapshot(doc => {
                 if (doc.exists) {
                     userData = doc.data();
                     document.getElementById('user-coins').innerText = userData.jimmyCoins || 0;
-                    actualizarEstadoBotonesRandom(); // <--- AÑADE ESTA LÍNEA AQUÍ
+                    actualizarEstadoBotonesRandom(); 
                 } else {
                     // Si es nuevo, crearle su perfil en la base de datos
                     db.collection('usuarios').doc(user.uid).set({
-                        nombre: user.displayName,
-                        email: user.email,
+                        nombre: user.displayName || 'Sin Nombre',
+                        email: user.email || 'Sin Email',
                         jimmyCoins: 0,
                         rol: 'cliente',
                         fechaRegistro: firebase.firestore.FieldValue.serverTimestamp()
@@ -79,10 +92,12 @@ window.onload = function() {
                 }
             });
         } else {
+            // Usuario desconectado
             currentUser = null;
             userData = null;
             document.getElementById('btn-login').classList.remove('hidden');
             document.getElementById('user-info').classList.add('hidden');
+            actualizarEstadoBotonesRandom(); // Para resetear los botones de la ruleta
         }
     });
 
@@ -365,10 +380,10 @@ function copiarMensaje() {
 function abrirPerfil() {
     if (!currentUser || !userData) return;
     
-    // Llenar datos básicos
-    document.getElementById('perfil-modal-pic').src = currentUser.photoURL;
-    document.getElementById('perfil-modal-nombre').innerText = currentUser.displayName;
-    document.getElementById('perfil-modal-email').innerText = currentUser.email;
+    // Llenar datos básicos con protección de errores
+    document.getElementById('perfil-modal-pic').src = currentUser.photoURL || './img/logo w.png';
+    document.getElementById('perfil-modal-nombre').innerText = currentUser.displayName || 'Usuario';
+    document.getElementById('perfil-modal-email').innerText = currentUser.email || '';
     document.getElementById('perfil-modal-coins').innerText = userData.jimmyCoins || 0;
     
     // Calcular barra de progreso (cada 400 monedas)
