@@ -1,209 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Berbel Tattoo Studio | Diseños Únicos y Exclusivos</title>
-    <meta name="description" content="Reserva tu diseño de tatuaje único en Berbel Tattoo. Catálogo en tiempo real de estilo Marvel, Anime, Disney y más. Gana Jimmy Coins con tus reservas.">
-    <meta name="keywords" content="tatuajes, tattoo, marvel, anime, disney, estudio de tatuajes, reservar tatuaje, granollers, barcelona">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
-
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .spin-slow { animation: spin 3s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 3px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Berbel Tattoo — Diseños exclusivos</title>
+  <meta name="description" content="Diseños de tatuaje exclusivos de Berbel Tattoo. Elige tu pieza, resérvala y hazla tuya.">
+  <meta name="theme-color" content="#0b0b0b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script defer src="brain.js"></script>
 </head>
-<body class="antialiased min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
+<body>
+  <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
 
-    <header class="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/10 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-2">
-            <div class="flex-shrink-0 cursor-pointer group" onclick="cambiarVista('home')">
-                <div class="relative w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-red-600 transition-all duration-300 shadow-xl">
-                    <img src="./img/logo w.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" alt="Logo Berbel Tattoo">
-                    <div class="hidden w-full h-full bg-zinc-900 items-center justify-center text-red-600 font-black text-xl italic text-center">BT</div>
-                </div>
-            </div>
-
-            <nav class="flex items-center bg-zinc-900/80 p-1 rounded-full border border-white/5 gap-1 md:gap-2 overflow-x-auto">
-                <button onclick="cambiarVista('home')" id="btn-home" class="px-3 md:px-6 py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider transition-all text-white bg-red-700 shadow-lg whitespace-nowrap">Catálogo</button>
-                <button onclick="cambiarVista('videos')" id="btn-videos" class="px-3 md:px-6 py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider transition-all text-zinc-400 hover:text-white hover:bg-zinc-800 whitespace-nowrap">Videos</button>
-                <button onclick="cambiarVista('random')" id="btn-random" class="px-3 md:px-6 py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider transition-all text-zinc-400 hover:text-white hover:bg-zinc-800 whitespace-nowrap">Aleatorio</button>
-            </nav>
-
-            <div class="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                <div id="user-info" class="hidden flex items-center gap-3">
-                    <div class="text-right hidden md:block group relative cursor-help">
-                        <p id="user-name" class="text-xs font-bold text-white truncate w-24">Cargando...</p>
-                        <p class="text-[10px] text-red-500 font-black italic tracking-widest"><span id="user-coins">0</span> COINS</p>
-                        <div class="absolute top-full right-0 mt-2 w-48 p-2 bg-zinc-900 border border-red-900/50 text-[10px] text-zinc-300 rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                            Recuerda: ¡Cada 400 monedas consigues un 20% de descuento en tu próximo tatuaje!
-                        </div>
-                    </div>
-                    <button onclick="abrirPerfil()" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <img id="user-pic" src="" alt="Avatar" class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.3)]">
-                    </button>
-                </div>
-
-                <button onclick="loginGoogle()" id="btn-login" class="flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full border border-zinc-800 text-zinc-400 hover:text-white hover:border-red-600 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-zinc-900/50">
-                    <i data-lucide="log-in" class="w-4 h-4"></i> <span class="hidden md:inline">Entrar</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 md:py-12 w-full relative">
-        
-        <section id="vista-home" class="fade-in">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 md:mb-16 border-b border-white/10 pb-8">
-                <div>
-                    <h1 class="text-3xl md:text-6xl font-black tracking-tighter mb-4 text-white uppercase italic">Diseños <span class="text-red-600">Disponibles</span></h1>
-                    <p class="text-zinc-400 max-w-lg text-sm md:text-lg font-light italic">Reserva tu pieza única. Sincronizado en tiempo real.</p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-center">
-                    <div class="relative group w-full sm:w-auto">
-                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4 group-focus-within:text-red-500"></i>
-                        <input type="text" id="buscador" placeholder="BUSCAR TATUAJE..." onkeyup="renderizarCatalogo()" class="bg-zinc-900 border border-zinc-800 rounded-none pl-12 pr-6 py-3 w-full sm:w-64 focus:outline-none focus:border-red-600 transition-all text-sm uppercase tracking-wider font-mono">
-                    </div>
-                    <div class="flex gap-2 overflow-x-auto w-full sm:w-auto justify-center pb-2 sm:pb-0 scrollbar-hide">
-                        <button onclick="filtrarCategoria('todos')" class="filter-btn px-4 md:px-6 py-2 md:py-3 border border-zinc-800 text-[10px] md:text-xs font-black uppercase bg-white text-black" data-cat="todos">Todos</button>
-                        <button onclick="filtrarCategoria('marvel')" class="filter-btn px-4 md:px-6 py-2 md:py-3 border border-zinc-800 text-[10px] md:text-xs font-black uppercase text-zinc-500 hover:text-white bg-zinc-900" data-cat="marvel">Marvel</button>
-                        <button onclick="filtrarCategoria('anime')" class="filter-btn px-4 md:px-6 py-2 md:py-3 border border-zinc-800 text-[10px] md:text-xs font-black uppercase text-zinc-500 hover:text-white bg-zinc-900" data-cat="anime">Anime</button>
-                        <button onclick="filtrarCategoria('disney')" class="filter-btn px-4 md:px-6 py-2 md:py-3 border border-zinc-800 text-[10px] md:text-xs font-black uppercase text-zinc-500 hover:text-white bg-zinc-900" data-cat="disney">Disney</button>
-                    </div>
-                </div>
-            </div>
-            <div id="grid-tattoos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"></div>
-        </section>
-
-        <section id="vista-videos" class="hidden fade-in">
-            <div class="mb-12 border-b border-white/10 pb-8">
-                <h2 class="text-3xl md:text-6xl font-black tracking-tighter mb-4 text-white uppercase italic">Berbel <span class="text-red-600">En Acción</span></h2>
-                <p class="text-zinc-400 max-w-lg text-sm md:text-lg font-light italic">Procesos, resultados y vida en el estudio.</p>
-            </div>
-            <div id="grid-videos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <p class="text-zinc-500 italic col-span-full">Cargando videos...</p>
-            </div>
-        </section>
-
-        <section id="vista-random" class="hidden fade-in">
-            <div class="w-full max-w-3xl mx-auto p-1 bg-gradient-to-br from-zinc-800 to-black rounded-3xl mt-4 shadow-2xl">
-                <div class="bg-black rounded-[22px] p-6 md:p-12 border border-white/5 text-center">
-                    <h2 class="text-3xl md:text-4xl font-black mb-8 text-white flex flex-col items-center gap-4 uppercase italic tracking-tighter">
-                        <div class="p-3 bg-red-600 rounded-full text-black shadow-lg shadow-red-600/50"><i data-lucide="shuffle" class="w-6 h-6 md:w-8 md:h-8"></i></div>
-                        Tu Destino en Tinta
-                    </h2>
-                    
-                    <div id="random-options" class="space-y-4 md:space-y-6 text-left text-xs md:text-base">
-                        <button id="btn-spin-all" onclick="manejarClickRuleta('all')" class="w-full group bg-zinc-900 hover:bg-zinc-800 p-6 rounded-xl border border-zinc-800 hover:border-red-600 transition-all flex justify-between items-center">
-                            <div><h3 id="txt-spin-all-title" class="text-lg md:text-2xl font-black text-white italic uppercase">Ruleta Rusa</h3><p id="txt-spin-all-desc" class="text-zinc-500 text-[10px] md:text-sm tracking-wide">Cualquier diseño del catálogo.</p></div>
-                            <div class="text-right"><span class="block text-2xl md:text-4xl font-black text-red-600 italic">80€</span><span class="text-sm text-zinc-600 line-through">130€</span></div>
-                        </button>
-
-                        <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
-                            <div class="flex justify-between items-center mb-6">
-                                <div><h3 class="text-lg md:text-2xl font-black text-white italic uppercase">Por Categoría</h3></div>
-                                <div class="text-right"><span class="block text-2xl md:text-4xl font-black text-white italic">100€</span></div>
-                            </div>
-                            <div class="grid grid-cols-3 gap-2 mb-6 text-[10px] md:text-xs">
-                                <button onclick="seleccionarCatRandom('marvel')" id="btn-rand-marvel" class="cat-rand-btn py-3 font-black tracking-widest uppercase rounded border-2 border-transparent bg-black text-zinc-500 hover:text-white">MARVEL</button>
-                                <button onclick="seleccionarCatRandom('anime')" id="btn-rand-anime" class="cat-rand-btn py-3 font-black tracking-widest uppercase rounded border-2 border-transparent bg-black text-zinc-500 hover:text-white">ANIME</button>
-                                <button onclick="seleccionarCatRandom('disney')" id="btn-rand-disney" class="cat-rand-btn py-3 font-black tracking-widest uppercase rounded border-2 border-transparent bg-black text-zinc-500 hover:text-white">DISNEY</button>
-                            </div>
-                            <button id="btn-spin-cat" onclick="manejarClickRuleta('cat')" class="w-full bg-white text-black font-black py-4 rounded hover:bg-red-600 hover:text-white transition-all uppercase tracking-[0.2em] shadow-lg text-xs md:text-sm">Jugar Ahora</button>
-                        </div>
-                    </div>
-
-                    <div id="random-loading" class="hidden py-24"><div class="w-20 h-20 border-8 border-zinc-900 border-t-red-600 rounded-full spin-slow mx-auto mb-8"></div><p class="text-red-500 animate-pulse font-black uppercase text-xs tracking-widest">El destino está decidiendo...</p></div>
-                    
-                    <div id="random-result" class="hidden py-4">
-                        <p class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.4em] mb-4">SELECCIÓN FINAL</p>
-                        <h3 id="res-nombre" class="text-3xl md:text-5xl font-black text-white mb-8 tracking-tighter uppercase italic text-center">NOMBRE</h3>
-                        <div class="w-48 h-48 mx-auto bg-black rounded shadow-[0_0_50px_rgba(220,38,38,0.2)] mb-8 border border-white/10 relative overflow-hidden flex items-center justify-center">
-                             <img id="res-img" src="" class="w-full h-full object-cover hidden" alt="Resultado">
-                        </div>
-                        <div class="mb-8 text-center">
-                            <div class="flex items-baseline justify-center gap-4"><span id="res-precio" class="text-5xl md:text-7xl font-black text-red-600 italic">80€</span></div>
-                            <div class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded font-mono text-[10px] text-zinc-400 mt-4 inline-block tracking-widest">CÓDIGO SECRETO: <span id="res-pass" class="text-white font-bold ml-2">XXXXXX</span></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mt-8">
-                            <button onclick="volverMenuRandom()" class="py-4 border border-zinc-800 text-zinc-400 hover:text-white font-bold uppercase text-[10px] tracking-widest">Menú</button>
-                            <button id="btn-res-claim" class="bg-red-600 text-white py-4 font-black uppercase hover:bg-red-700 transition-all text-[10px] shadow-lg">Reservar Premio</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div id="modal-perfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4 fade-in">
-            <div class="bg-zinc-950 border border-zinc-800 w-full max-w-sm shadow-2xl rounded-sm overflow-hidden">
-                <div class="bg-gradient-to-br from-red-900 to-black p-6 flex flex-col items-center justify-center relative border-b border-red-600/30">
-                    <button onclick="cerrarModal('modal-perfil')" class="absolute top-4 right-4 text-white hover:scale-110 transition-transform"><i data-lucide="x" class="w-5 h-5"></i></button>
-                    <img id="perfil-modal-pic" src="" class="w-20 h-20 rounded-full border-4 border-black shadow-xl mb-3">
-                    <h3 id="perfil-modal-nombre" class="text-xl font-black text-white uppercase italic tracking-wider">Nombre</h3>
-                    <p id="perfil-modal-email" class="text-xs text-zinc-400 font-mono">email@ejemplo.com</p>
-                </div>
-                
-                <div class="p-6 md:p-8 text-center bg-black">
-                    <p class="text-[10px] text-zinc-500 font-black tracking-[0.3em] uppercase mb-2">Tu Billetera</p>
-                    <div class="flex items-baseline justify-center gap-2 mb-6">
-                        <span id="perfil-modal-coins" class="text-5xl font-black text-red-600 italic">0</span>
-                        <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest">Coins</span>
-                    </div>
-                    
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 text-left relative overflow-hidden group">
-                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2 uppercase tracking-widest">
-                            <span>Progreso Descuento</span>
-                            <span id="perfil-progreso-texto">0 / 400</span>
-                        </div>
-                        <div class="w-full bg-black h-2 rounded-full overflow-hidden border border-zinc-800">
-                            <div id="perfil-barra" class="bg-red-600 h-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.8)]" style="width: 0%"></div>
-                        </div>
-                        <p class="text-[9px] text-zinc-500 mt-3 italic text-center">Llega a 400 monedas y obtén un 20% OFF en tu próximo tattoo.</p>
-                    </div>
-                </div>
-                
-                <button onclick="logoutGoogle()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold py-4 uppercase text-xs transition-all flex items-center justify-center gap-2 border-t border-zinc-800 tracking-widest">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> <span>Cerrar Sesión</span>
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <footer class="border-t border-zinc-900 py-12 bg-black text-center mt-auto">
-        <h3 class="font-black text-white tracking-[0.5em] text-sm mb-2 uppercase italic">Berbel Tattoo</h3>
-        <div class="flex justify-center gap-8 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-6">
-            <a href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener noreferrer" class="hover:text-red-500 transition-colors">Instagram</a>
-        </div>
-    </footer>
-
-    <div id="modal-reserva" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4 fade-in">
-        <div class="bg-zinc-950 border border-zinc-800 w-full max-w-md shadow-2xl rounded-sm">
-            <div class="bg-red-600 p-4 flex justify-between items-center text-white italic"><h3 class="text-lg font-black uppercase tracking-wider">Confirmar Reserva</h3><button onclick="cerrarModal('modal-reserva')"><i data-lucide="x" class="w-5 h-5"></i></button></div>
-            <div class="p-6 text-center">
-                <p class="text-zinc-400 text-xs mb-4 italic">Copia este mensaje y envíalo al Instagram de Berbel Tattoo.</p>
-                <div class="bg-black p-4 border border-zinc-800 font-mono text-zinc-300 text-xs mb-6 text-left italic"><p id="modal-mensaje">...</p></div>
-                <div class="grid gap-3">
-                    <button onclick="copiarMensaje()" id="btn-copiar" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-3 uppercase text-[10px] transition-all flex items-center justify-center gap-2 border border-zinc-800"><i data-lucide="copy" class="w-3 h-3"></i> <span>Copiar Mensaje</span></button>
-                    <a href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener noreferrer" class="block bg-white text-black hover:bg-zinc-200 font-black py-3 uppercase text-[10px] transition-all text-center">Ir al Perfil de Berbel</a>
-                </div>
-            </div>
-        </div>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Berbel Tattoo, inicio">
+      <img src="img/logo w.png" alt="Berbel Tattoo">
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#catalogo">Diseños</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <button class="nav-link" type="button" onclick="cambiarVista('random')">Tinta al azar</button>
+    </nav>
+    <div class="header-actions">
+      <a id="admin-link" class="admin-link hidden" href="admin.html" aria-label="Abrir panel de administración">Admin</a>
+      <div id="user-info" class="user-chip hidden">
+        <button type="button" onclick="abrirPerfil()" aria-label="Abrir mi perfil">
+          <img id="user-pic" src="img/logo w.png" alt="">
+          <span><strong id="user-name">Mi cuenta</strong><small><b id="user-coins">0</b> coins</small></span>
+        </button>
+      </div>
+      <button id="btn-login" class="button button-small button-outline" type="button" onclick="loginGoogle()">Mi cuenta</button>
+      <a class="button button-small button-solid desktop-cta" href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Contactar <span>↗</span></a>
     </div>
-    
-    <script src="brain.js"></script>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <p class="eyebrow">Piezas únicas · Una sola piel</p>
+        <h1>Tu próxima historia,<br><em>dibujada en tinta.</em></h1>
+        <p class="hero-lead">Diseños originales listos para reservar. Elige la pieza que conecta contigo y Berbel la adapta a tu cuerpo y a tu historia.</p>
+        <div class="hero-actions">
+          <a class="button button-solid" href="#catalogo">Ver diseños <span>↓</span></a>
+          <a class="text-link" href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Hablar con el artista <span>↗</span></a>
+        </div>
+        <div class="hero-proof" aria-label="Ventajas">
+          <div><strong>24</strong><span>diseños originales</span></div>
+          <div><strong>1/1</strong><span>cada pieza es única</span></div>
+          <div><strong>100%</strong><span>adaptado a ti</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="Diseño destacado de Berbel Tattoo">
+        <div class="ink-stamp">Diseño<br>original</div>
+        <img src="img/006.png" alt="Diseño Black Panther de Berbel Tattoo">
+        <div class="featured-caption"><span>Diseño 006</span><strong>Black Panther</strong></div>
+      </div>
+    </section>
+
+    <section class="marquee" aria-label="Especialidades">
+      <div>BLACKWORK <i>✦</i> LÍNEA FINA <i>✦</i> DISEÑO PERSONALIZADO <i>✦</i> PIEZAS EXCLUSIVAS <i>✦</i></div>
+    </section>
+
+    <section class="catalog-section" id="catalogo">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Colección disponible</p>
+          <h2>Encuentra tu <em>pieza.</em></h2>
+        </div>
+        <p>Todos los diseños se tatúan una sola vez. Cuando una pieza se reserva, desaparece de la colección.</p>
+      </div>
+
+      <div class="catalog-tools">
+        <div class="filters" role="group" aria-label="Filtrar diseños por categoría">
+          <button class="filter-btn active" type="button" data-cat="todos" onclick="filtrarCategoria('todos')">Todos</button>
+          <button class="filter-btn" type="button" data-cat="marvel" onclick="filtrarCategoria('marvel')">Marvel</button>
+          <button class="filter-btn" type="button" data-cat="anime" onclick="filtrarCategoria('anime')">Anime</button>
+          <button class="filter-btn" type="button" data-cat="disney" onclick="filtrarCategoria('disney')">Disney</button>
+        </div>
+        <label class="search-box">
+          <span class="sr-only">Buscar diseño</span>
+          <input id="buscador" type="search" placeholder="Buscar diseño..." oninput="renderizarCatalogo()">
+          <span aria-hidden="true">⌕</span>
+        </label>
+      </div>
+      <p id="catalog-status" class="catalog-status" aria-live="polite"></p>
+      <div id="grid-tattoos" class="tattoo-grid"></div>
+    </section>
+
+    <section class="process-section" id="como-funciona">
+      <div class="process-intro">
+        <p class="eyebrow light">Sin complicaciones</p>
+        <h2>De la pantalla<br><em>a tu piel.</em></h2>
+        <p>Una reserva clara, una conversación honesta y un diseño preparado para encajar contigo.</p>
+      </div>
+      <ol class="process-list">
+        <li><span>01</span><div><h3>Elige tu diseño</h3><p>Explora la colección y abre la pieza que te representa.</p></div></li>
+        <li><span>02</span><div><h3>Reserva por Instagram</h3><p>Te preparamos el mensaje con toda la información del diseño.</p></div></li>
+        <li><span>03</span><div><h3>Adáptalo contigo</h3><p>Berbel ajusta tamaño, zona y acabados antes de la sesión.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="vista-random" class="random-section hidden" aria-labelledby="random-title">
+      <div class="random-copy">
+        <p class="eyebrow">Para quienes se atreven</p>
+        <h2 id="random-title">Deja que la tinta<br><em>te encuentre.</em></h2>
+        <p>Entra con tu cuenta, gira la ruleta y consigue una pieza disponible a precio especial.</p>
+      </div>
+      <div class="random-card">
+        <div id="random-options">
+          <button id="btn-spin-all" class="random-choice" type="button" onclick="manejarClickRuleta('all')">
+            <span><small>Cualquier categoría</small><strong id="txt-spin-all-title">Ruleta total</strong><em id="txt-spin-all-desc">Una pieza sorpresa del catálogo</em></span>
+            <b>80 €</b>
+          </button>
+          <div class="category-choice">
+            <div><small>Elige un universo</small><strong>Ruleta por categoría</strong><b>100 €</b></div>
+            <div class="random-tabs">
+              <button id="btn-rand-marvel" class="cat-rand-btn active" type="button" onclick="seleccionarCatRandom('marvel')">Marvel</button>
+              <button id="btn-rand-anime" class="cat-rand-btn" type="button" onclick="seleccionarCatRandom('anime')">Anime</button>
+              <button id="btn-rand-disney" class="cat-rand-btn" type="button" onclick="seleccionarCatRandom('disney')">Disney</button>
+            </div>
+            <button id="btn-spin-cat" class="button button-solid full" type="button" onclick="manejarClickRuleta('cat')">Girar la ruleta</button>
+          </div>
+        </div>
+        <div id="random-loading" class="random-loading hidden" aria-live="polite">
+          <div class="roulette-window">
+            <img id="random-preview-img" src="img/001.png" alt="">
+            <div class="roulette-scanline"></div>
+            <span class="roulette-corner top-left"></span><span class="roulette-corner top-right"></span>
+            <span class="roulette-corner bottom-left"></span><span class="roulette-corner bottom-right"></span>
+          </div>
+          <p>La tinta está eligiendo...</p>
+          <strong id="random-preview-name">Preparando la ruleta</strong>
+          <div class="roulette-progress"><i></i></div>
+        </div>
+        <div id="random-result" class="random-result hidden">
+          <small>Tu pieza es</small><h3 id="res-nombre">Nombre</h3>
+          <img id="res-img" src="" alt="Diseño elegido por la ruleta">
+          <div class="result-meta"><strong id="res-precio">80 €</strong><span>Código: <b id="res-pass">—</b></span></div>
+          <div class="result-actions"><button class="button button-outline" type="button" onclick="volverMenuRandom()">Volver</button><button id="btn-res-claim" class="button button-solid" type="button">Reservar</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vista-videos" class="videos-section">
+      <div class="section-heading compact">
+        <div><p class="eyebrow">Desde el estudio</p><h2>Proceso y <em>resultado.</em></h2></div>
+      </div>
+      <div id="grid-videos" class="video-grid"><p class="empty-state">Próximamente compartiremos nuevos procesos desde el estudio.</p></div>
+    </section>
+
+    <section class="contact-section">
+      <p class="eyebrow light">¿Tienes una idea propia?</p>
+      <h2>Hablemos de tu<br><em>próxima pieza.</em></h2>
+      <a class="button button-light" href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Escribir por Instagram <span>↗</span></a>
+    </section>
+  </main>
+
+  <footer>
+    <img src="img/logo w.png" alt="Berbel Tattoo">
+    <p>Diseños exclusivos · Tinta con intención</p>
+    <div><a href="#inicio">Volver arriba ↑</a><a href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Instagram ↗</a></div>
+    <small>© <span id="year"></span> Berbel Tattoo</small>
+  </footer>
+
+  <div id="modal-reserva" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="reserva-title">
+    <div class="modal-card">
+      <button class="modal-close" type="button" onclick="cerrarModal('modal-reserva')" aria-label="Cerrar">×</button>
+      <p class="eyebrow">Tu diseño</p><h2 id="reserva-title">Reserva tu pieza</h2>
+      <p>Hemos preparado el mensaje para que puedas contactar con Berbel sin perder ningún detalle.</p>
+      <div id="modal-mensaje" class="message-preview">...</div>
+      <button id="btn-copiar" class="button button-outline full" type="button" onclick="copiarMensaje()">Copiar mensaje</button>
+      <a class="button button-solid full" href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Abrir Instagram <span>↗</span></a>
+    </div>
+  </div>
+
+  <div id="modal-perfil" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="perfil-modal-nombre">
+    <div class="modal-card profile-card">
+      <button class="modal-close" type="button" onclick="cerrarModal('modal-perfil')" aria-label="Cerrar">×</button>
+      <img id="perfil-modal-pic" src="img/logo w.png" alt="Foto de perfil">
+      <h2 id="perfil-modal-nombre">Mi cuenta</h2><p id="perfil-modal-email"></p>
+      <div class="wallet"><small>Tu saldo</small><strong><span id="perfil-modal-coins">0</span> coins</strong><div><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 400 para tu descuento</p></div>
+      <button class="button button-outline full" type="button" onclick="logoutGoogle()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
