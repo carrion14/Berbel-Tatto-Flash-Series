@@ -1,114 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Bóveda | Admin Berbel Tattoo</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
-
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 3px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Panel de administración — Berbel Tattoo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css?v=3">
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script defer src="admin.js?v=3"></script>
 </head>
-<body class="antialiased min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
-
-    <div id="pantalla-bloqueo" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
-        <i data-lucide="shield-alert" class="w-16 h-16 text-red-600 animate-pulse mb-4"></i>
-        <h2 class="text-2xl font-black uppercase tracking-widest italic">Verificando Acceso...</h2>
-        <p id="error-acceso" class="text-red-500 mt-4 text-sm font-mono hidden">ACCESO DENEGADO. NO ERES ADMINISTRADOR.</p>
-        <button id="btn-volver" onclick="window.location.href='index.html'" class="mt-6 hidden border border-zinc-800 px-6 py-2 text-xs uppercase font-bold text-zinc-400 hover:text-white transition-all">Volver a la web</button>
+<body>
+  <div id="access-screen" class="access-screen">
+    <div class="access-card">
+      <img src="img/logo w.png" alt="Berbel Tattoo">
+      <div id="access-loading">
+        <span class="loader"></span>
+        <p>Comprobando acceso seguro…</p>
+      </div>
+      <div id="access-login" class="hidden">
+        <p class="eyebrow">Zona privada</p>
+        <h1>Panel de administración</h1>
+        <p>Entra con una cuenta de Google autorizada para continuar.</p>
+        <button class="btn primary full" type="button" onclick="loginAdmin()">Entrar con Google</button>
+        <a class="btn ghost full" href="index.html">Volver a la web</a>
+      </div>
+      <div id="access-denied" class="hidden">
+        <p class="eyebrow danger">Acceso denegado</p>
+        <h1>Esta cuenta no es administradora</h1>
+        <p id="denied-email"></p>
+        <button class="btn primary full" type="button" onclick="cambiarCuenta()">Usar otra cuenta</button>
+        <a class="btn ghost full" href="index.html">Volver a la web</a>
+      </div>
     </div>
+  </div>
 
-    <header class="sticky top-0 z-40 bg-zinc-950 border-b border-red-900/30 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <i data-lucide="database" class="w-8 h-8 text-red-600"></i>
-                <div>
-                    <h1 class="font-black text-xl italic uppercase tracking-widest text-white">La Bóveda</h1>
-                    <p class="text-[10px] font-mono text-red-500 tracking-[0.2em]">PANEL DE CONTROL PRO</p>
-                </div>
-            </div>
-            
-            <nav class="flex gap-2 bg-black p-1 rounded border border-zinc-800">
-                <button onclick="cambiarTab('usuarios')" id="tab-btn-usuarios" class="tab-btn px-4 py-2 text-xs font-bold uppercase bg-red-600 text-white transition-all">Usuarios</button>
-                <button onclick="cambiarTab('tatuajes')" id="tab-btn-tatuajes" class="tab-btn px-4 py-2 text-xs font-bold uppercase text-zinc-500 hover:text-white transition-all">Inventario</button>
-                <button onclick="cambiarTab('videos')" id="tab-btn-videos" class="tab-btn px-4 py-2 text-xs font-bold uppercase text-zinc-500 hover:text-white transition-all">Videos</button>
-            </nav>
+  <div id="admin-app" class="admin-shell hidden">
+    <aside class="sidebar">
+      <a class="admin-brand" href="index.html" aria-label="Volver a Berbel Tattoo"><img src="img/logo w.png" alt="Berbel Tattoo"></a>
+      <p class="sidebar-label">Administración</p>
+      <nav aria-label="Secciones del panel">
+        <button class="nav-item active" type="button" data-tab="designs" onclick="cambiarTab('designs')"><span>01</span> Diseños</button>
+        <button class="nav-item" type="button" data-tab="users" onclick="cambiarTab('users')"><span>02</span> Cuentas</button>
+        <button class="nav-item" type="button" data-tab="videos" onclick="cambiarTab('videos')"><span>03</span> Vídeos</button>
+      </nav>
+      <div class="sidebar-user">
+        <img id="admin-avatar" src="img/logo w.png" alt="">
+        <div><strong id="admin-name">Administrador</strong><small id="admin-email"></small></div>
+        <button type="button" onclick="logoutAdmin()" aria-label="Cerrar sesión">↗</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="mobile-header">
+        <strong>Berbel · Admin</strong>
+        <a href="index.html">Ver web ↗</a>
+      </header>
+
+      <section id="tab-designs" class="panel-section">
+        <div class="panel-heading">
+          <div><p class="eyebrow">Inventario en tiempo real</p><h1>Diseños</h1><p>Cambia el precio o marca una pieza como reservada. La web pública se actualiza automáticamente.</p></div>
+          <a class="btn ghost" href="index.html#catalogo" target="_blank">Ver catálogo ↗</a>
         </div>
-    </header>
+        <div class="stats-grid">
+          <article><small>Total</small><strong id="stat-total">24</strong></article>
+          <article><small>Disponibles</small><strong id="stat-available">—</strong></article>
+          <article><small>Reservados</small><strong id="stat-reserved">—</strong></article>
+          <article><small>Precio medio</small><strong id="stat-price">—</strong></article>
+        </div>
+        <div class="toolbar">
+          <label class="search"><span>⌕</span><input id="design-search" type="search" placeholder="Buscar diseño…" oninput="renderizarTatuajesAdmin()"></label>
+          <div class="segmented" role="group" aria-label="Filtrar por estado">
+            <button class="active" type="button" data-status="todos" onclick="filtrarEstado('todos')">Todos</button>
+            <button type="button" data-status="disponible" onclick="filtrarEstado('disponible')">Disponibles</button>
+            <button type="button" data-status="vendido" onclick="filtrarEstado('vendido')">Reservados</button>
+          </div>
+        </div>
+        <div id="design-grid" class="design-grid"><p class="loading-copy">Cargando diseños…</p></div>
+      </section>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
-        
-        <section id="tab-usuarios" class="fade-in">
-            <h2 class="text-2xl font-black uppercase italic mb-6 border-b border-zinc-800 pb-2">Gestión de Jimmy Coins</h2>
-            <div class="relative mb-6">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4"></i>
-                <input type="text" id="buscador-usuarios" onkeyup="renderizarUsuarios()" placeholder="Buscar usuario por nombre o email..." class="w-full bg-zinc-900 border border-zinc-800 pl-12 pr-4 py-3 text-sm focus:border-red-600 outline-none text-white font-mono">
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-zinc-900 border-b border-zinc-800 text-[10px] uppercase tracking-widest text-zinc-500">
-                            <th class="p-4">Usuario</th>
-                            <th class="p-4">Email y Premios</th> 
-                            <th class="p-4 text-center">Jimmy Coins</th>
-                            <th class="p-4 text-right">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-usuarios">
-                        </tbody>
-                </table>
-            </div>
-        </section>
+      <section id="tab-users" class="panel-section hidden">
+        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona Jimmy Coins y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
+        <div class="notice"><strong>Tu cuenta está protegida.</strong><span>No puedes retirarte tus propios permisos por accidente.</span></div>
+        <label class="search wide"><span>⌕</span><input id="user-search" type="search" placeholder="Buscar por nombre o correo…" oninput="renderizarUsuarios()"></label>
+        <div id="users-list" class="users-list"><p class="loading-copy">Cargando cuentas…</p></div>
+      </section>
 
-        <section id="tab-tatuajes" class="hidden fade-in">
-            <h2 class="text-2xl font-black uppercase italic mb-6 border-b border-zinc-800 pb-2">Gestión de Tatuajes</h2>
-            <div id="grid-admin-tattoos" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                </div>
-        </section>
-
-        <section id="tab-videos" class="hidden fade-in">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded h-fit">
-                    <h3 class="font-black uppercase text-red-500 tracking-widest mb-4"><i data-lucide="plus-square" class="inline w-4 h-4 mr-2"></i>Añadir Nuevo Video</h3>
-                    <form id="form-video" onsubmit="guardarVideo(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">URL del Video (YouTube, MP4)</label>
-                            <input type="text" id="vid-url" required placeholder="https://..." class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">Título</label>
-                            <input type="text" id="vid-titulo" required class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-zinc-500 font-bold mb-1 uppercase">Descripción (Opcional)</label>
-                            <textarea id="vid-desc" class="w-full bg-black border border-zinc-800 p-2 text-xs focus:border-red-600 outline-none h-20"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-red-600 text-white font-black py-3 uppercase text-xs tracking-widest hover:bg-red-700 transition-all">Publicar Video</button>
-                    </form>
-                </div>
-                <div class="lg:col-span-2">
-                    <h3 class="font-black uppercase text-zinc-500 tracking-widest mb-4">Videos Publicados</h3>
-                    <div id="lista-admin-videos" class="space-y-4">
-                        </div>
-                </div>
-            </div>
-        </section>
-
+      <section id="tab-videos" class="panel-section hidden">
+        <div class="panel-heading"><div><p class="eyebrow">Contenido del estudio</p><h1>Vídeos</h1><p>Publica procesos y resultados que aparecerán en la web.</p></div></div>
+        <div class="video-layout">
+          <form id="video-form" class="editor-card" onsubmit="guardarVideo(event)">
+            <h2>Nuevo vídeo</h2>
+            <label>Enlace de YouTube o MP4<input id="video-url" type="url" required placeholder="https://…"></label>
+            <label>Título<input id="video-title" type="text" maxlength="80" required placeholder="Proceso de tatuaje"></label>
+            <label>Descripción<textarea id="video-description" maxlength="240" placeholder="Una descripción breve…"></textarea></label>
+            <button id="video-submit" class="btn primary full" type="submit">Publicar vídeo</button>
+          </form>
+          <div><h2 class="list-title">Publicados</h2><div id="videos-list" class="videos-list"><p class="loading-copy">Cargando vídeos…</p></div></div>
+        </div>
+      </section>
     </main>
-
-    <script src="admin.js"></script>
+  </div>
+  <div id="points-modal" class="admin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="points-modal-title">
+    <form class="points-card" onsubmit="guardarEdicionPuntos(event)">
+      <button class="points-close" type="button" onclick="cerrarEditorPuntos()" aria-label="Cerrar">×</button>
+      <p class="eyebrow">Editar saldo</p>
+      <h2 id="points-modal-title">Jimmy Coins</h2>
+      <p id="points-user-label"></p>
+      <label for="points-input">Nuevo total de puntos</label>
+      <input id="points-input" type="number" min="0" max="1000000" step="1" required inputmode="numeric">
+      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar puntos</button></div>
+    </form>
+  </div>
+  <div id="admin-toast" class="admin-toast" role="status" aria-live="polite"></div>
 </body>
 </html>
