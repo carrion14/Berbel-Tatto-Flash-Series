@@ -78,8 +78,7 @@ function videoSeguro(url=""){
 
 function cambiarVista(v){
   if(v!=="random")return;
-  if(!currentUser){mostrarToast("Inicia sesión para guardar tu premio");loginGoogle();return;}
-  $("vista-random").classList.remove("hidden");volverMenuRandom();setTimeout(()=>$("vista-random").scrollIntoView({behavior:"smooth"}),20);
+  volverMenuRandom();setTimeout(()=>$("vista-random").scrollIntoView({behavior:"smooth"}),20);
 }
 function loginGoogle(){
   if(!db||typeof firebase==="undefined"){mostrarToast("La cuenta no está disponible en este momento");return;}
