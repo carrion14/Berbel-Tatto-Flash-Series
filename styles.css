@@ -11,3 +11,5 @@
 .random-loading p{margin:0 0 5px;color:var(--red);font-size:10px;text-transform:uppercase;letter-spacing:.17em}.random-loading>strong{font:700 24px var(--display)}
 .roulette-progress{height:2px;background:#d0cac0;max-width:280px;margin:20px auto 0;overflow:hidden}.roulette-progress i{display:block;width:100%;height:100%;background:var(--red);transform-origin:left;animation:rouletteProgress 2.25s linear forwards}
 @keyframes roulettePulse{to{transform:scale(1.035);filter:contrast(1.3) blur(.3px)}}@keyframes scan{0%{top:8%}50%{top:91%}100%{top:8%}}@keyframes rouletteProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.random-section{scroll-margin-top:86px}
+@media(max-width:740px){.random-section{scroll-margin-top:70px}}
