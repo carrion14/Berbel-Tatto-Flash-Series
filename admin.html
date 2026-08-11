@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=6">
+  <link rel="stylesheet" href="admin.css?v=7">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=7"></script>
+  <script defer src="admin.js?v=8"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -108,7 +108,7 @@
         <div class="video-layout">
           <form id="video-form" class="editor-card" onsubmit="guardarVideo(event)">
             <h2>Nuevo vídeo</h2>
-            <label>Enlace de YouTube o MP4<input id="video-url" type="url" required placeholder="https://…"></label>
+            <label>Enlace de Instagram, YouTube, imagen o MP4<input id="video-url" type="url" required placeholder="https://www.instagram.com/reel/…"><small class="field-help">En Instagram copia el enlace de una publicación o reel público, no la dirección temporal de la foto.</small></label>
             <label>Título<input id="video-title" type="text" maxlength="80" required placeholder="Proceso de tatuaje"></label>
             <label>Descripción<textarea id="video-description" maxlength="240" placeholder="Una descripción breve…"></textarea></label>
             <button id="video-submit" class="btn primary full" type="submit">Publicar vídeo</button>
