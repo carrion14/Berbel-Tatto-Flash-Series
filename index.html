@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=4">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="brain.js"></script>
+  <script defer src="brain.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
@@ -78,12 +78,7 @@
       </div>
 
       <div class="catalog-tools">
-        <div class="filters" role="group" aria-label="Filtrar diseños por categoría">
-          <button class="filter-btn active" type="button" data-cat="todos" onclick="filtrarCategoria('todos')">Todos</button>
-          <button class="filter-btn" type="button" data-cat="marvel" onclick="filtrarCategoria('marvel')">Marvel</button>
-          <button class="filter-btn" type="button" data-cat="anime" onclick="filtrarCategoria('anime')">Anime</button>
-          <button class="filter-btn" type="button" data-cat="disney" onclick="filtrarCategoria('disney')">Disney</button>
-        </div>
+        <div id="category-filters" class="filters" role="group" aria-label="Filtrar diseños por categoría"></div>
         <label class="search-box">
           <span class="sr-only">Buscar diseño</span>
           <input id="buscador" type="search" placeholder="Buscar diseño..." oninput="renderizarCatalogo()">
@@ -117,15 +112,11 @@
         <div id="random-options">
           <button id="btn-spin-all" class="random-choice" type="button" onclick="manejarClickRuleta('all')">
             <span><small>Cualquier categoría</small><strong id="txt-spin-all-title">Ruleta total</strong><em id="txt-spin-all-desc">Una pieza sorpresa del catálogo</em></span>
-            <b>80 €</b>
+            <b id="total-roulette-price">80 €</b>
           </button>
           <div class="category-choice">
-            <div><small>Elige un universo</small><strong>Ruleta por categoría</strong><b>100 €</b></div>
-            <div class="random-tabs">
-              <button id="btn-rand-marvel" class="cat-rand-btn active" type="button" onclick="seleccionarCatRandom('marvel')">Marvel</button>
-              <button id="btn-rand-anime" class="cat-rand-btn" type="button" onclick="seleccionarCatRandom('anime')">Anime</button>
-              <button id="btn-rand-disney" class="cat-rand-btn" type="button" onclick="seleccionarCatRandom('disney')">Disney</button>
-            </div>
+            <div><small>Elige un universo</small><strong>Ruleta por categoría</strong><b id="category-roulette-price">100 €</b></div>
+            <div id="random-tabs" class="random-tabs"></div>
             <button id="btn-spin-cat" class="button button-solid full" type="button" onclick="manejarClickRuleta('cat')">Girar la ruleta</button>
           </div>
         </div>

@@ -13,3 +13,4 @@
 @keyframes roulettePulse{to{transform:scale(1.035);filter:contrast(1.3) blur(.3px)}}@keyframes scan{0%{top:8%}50%{top:91%}100%{top:8%}}@keyframes rouletteProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .random-section{scroll-margin-top:86px}
 @media(max-width:740px){.random-section{scroll-margin-top:70px}}
+.filters{flex-wrap:wrap}
