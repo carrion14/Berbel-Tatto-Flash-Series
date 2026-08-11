@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=5">
+  <link rel="stylesheet" href="admin.css?v=6">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=6"></script>
+  <script defer src="admin.js?v=7"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -90,9 +90,9 @@
       </section>
 
       <section id="tab-categories" class="panel-section hidden">
-        <div class="panel-heading"><div><p class="eyebrow">Organización y premios</p><h1>Categorías y ruletas</h1><p>Crea categorías para el catálogo, decide cuáles aparecen en la ruleta y define el precio de cada sorteo.</p></div><button class="btn primary" type="button" onclick="anadirCategoria()">Añadir categoría</button></div>
+        <div class="panel-heading"><div><p class="eyebrow">Organización y premios</p><h1>Categorías y ruletas</h1><p>Crea categorías para el catálogo, decide cuáles aparecen en la ruleta y define el precio de cada sorteo.</p></div><button class="btn primary" type="button" onclick="abrirEditorCategoria()">Añadir categoría</button></div>
         <div class="roulette-settings"><label>Precio de la ruleta total<div><input id="global-roulette-price" type="number" min="0" max="10000" step="5"><span>€</span><button type="button" onclick="guardarPrecioRuletaTotal()">Guardar</button></div></label><p>La ruleta total solo incluye los diseños que tengan activada la opción “Ruleta total”.</p></div>
-        <div class="category-table-head"><span>Nombre</span><span>Identificador</span><span>Ruleta activa</span><span>Precio</span><span></span></div>
+        <div class="category-table-head"><span>Nombre</span><span>Identificador</span><span>Ruleta</span><span>Precio</span><span></span></div>
         <div id="categories-list" class="categories-list"><p class="loading-copy">Cargando categorías…</p></div>
       </section>
 
@@ -134,6 +134,20 @@
       <div class="raffle-options"><strong>Participación en sorteos</strong><label><input id="design-raffle-all" type="checkbox"> Puede salir en la ruleta total</label><label><input id="design-raffle-category" type="checkbox"> Puede salir en <span id="design-raffle-category-label">la ruleta de su categoría</span></label></div>
       <div class="image-preview"><img id="design-image-preview" src="img/logo b.png" alt="Vista previa"></div>
       <div class="design-editor-actions"><button id="design-delete" class="btn danger-button hidden" type="button" onclick="eliminarDisenoActual()">Eliminar diseño</button><span></span><button class="btn ghost" type="button" onclick="cerrarEditorDiseno()">Cancelar</button><button id="design-save" class="btn primary" type="submit">Guardar diseño</button></div>
+    </form>
+  </div>
+  <div id="category-modal" class="admin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="category-modal-title">
+    <form id="category-form" class="design-editor category-editor" onsubmit="guardarEditorCategoria(event)">
+      <button class="points-close" type="button" onclick="cerrarEditorCategoria()" aria-label="Cerrar">×</button>
+      <p class="eyebrow">Editor de catálogo</p><h2 id="category-modal-title">Nueva categoría</h2>
+      <input id="category-id" type="hidden">
+      <div class="editor-grid">
+        <label class="span-2">Nombre<input id="category-name" type="text" maxlength="40" required placeholder="Ej. Tradicional"></label>
+        <label>Precio de su ruleta<input id="category-price" type="number" min="0" max="10000" step="5" required value="100"></label>
+        <label class="category-check"><input id="category-raffle" type="checkbox"> Mostrar esta categoría en las ruletas</label>
+      </div>
+      <p class="category-help">El identificador interno se crea automáticamente al guardar. Los diseños podrán asignarse a esta categoría inmediatamente.</p>
+      <div class="design-editor-actions"><button id="category-delete" class="btn danger-button hidden" type="button" onclick="eliminarCategoriaActual()">Eliminar categoría</button><span></span><button class="btn ghost" type="button" onclick="cerrarEditorCategoria()">Cancelar</button><button id="category-save" class="btn primary" type="submit">Guardar categoría</button></div>
     </form>
   </div>
   <div id="points-modal" class="admin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="points-modal-title">
