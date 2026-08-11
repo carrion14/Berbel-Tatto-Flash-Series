@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=4">
+  <link rel="stylesheet" href="admin.css?v=5">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=5"></script>
+  <script defer src="admin.js?v=6"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -73,6 +73,10 @@
           <article><small>Disponibles</small><strong id="stat-available">—</strong></article>
           <article><small>Reservados</small><strong id="stat-reserved">—</strong></article>
           <article><small>Precio medio</small><strong id="stat-price">—</strong></article>
+        </div>
+        <div class="storage-card">
+          <div><p class="eyebrow">Almacenamiento de imágenes</p><h2>Espacio utilizado</h2><p id="storage-summary">Pulsa analizar para comprobar cuánto ocupan las fotografías y localizar archivos que ya no usa ningún diseño.</p></div>
+          <div class="storage-actions"><button id="storage-scan" class="btn ghost" type="button" onclick="analizarAlmacenamiento()">Analizar almacenamiento</button><button id="storage-clean" class="btn danger-button hidden" type="button" onclick="limpiarArchivosHuerfanos()">Limpiar archivos sin uso</button></div>
         </div>
         <div class="toolbar">
           <label class="search"><span>⌕</span><input id="design-search" type="search" placeholder="Buscar diseño…" oninput="renderizarTatuajesAdmin()"></label>
