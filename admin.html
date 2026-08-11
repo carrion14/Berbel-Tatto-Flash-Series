@@ -8,11 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=3">
+  <link rel="stylesheet" href="admin.css?v=4">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="admin.js?v=3"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script defer src="admin.js?v=4"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -45,8 +46,9 @@
       <p class="sidebar-label">Administración</p>
       <nav aria-label="Secciones del panel">
         <button class="nav-item active" type="button" data-tab="designs" onclick="cambiarTab('designs')"><span>01</span> Diseños</button>
-        <button class="nav-item" type="button" data-tab="users" onclick="cambiarTab('users')"><span>02</span> Cuentas</button>
-        <button class="nav-item" type="button" data-tab="videos" onclick="cambiarTab('videos')"><span>03</span> Vídeos</button>
+        <button class="nav-item" type="button" data-tab="categories" onclick="cambiarTab('categories')"><span>02</span> Categorías y ruletas</button>
+        <button class="nav-item" type="button" data-tab="users" onclick="cambiarTab('users')"><span>03</span> Cuentas</button>
+        <button class="nav-item" type="button" data-tab="videos" onclick="cambiarTab('videos')"><span>04</span> Vídeos</button>
       </nav>
       <div class="sidebar-user">
         <img id="admin-avatar" src="img/logo w.png" alt="">
@@ -64,7 +66,7 @@
       <section id="tab-designs" class="panel-section">
         <div class="panel-heading">
           <div><p class="eyebrow">Inventario en tiempo real</p><h1>Diseños</h1><p>Cambia el precio o marca una pieza como reservada. La web pública se actualiza automáticamente.</p></div>
-          <a class="btn ghost" href="index.html#catalogo" target="_blank">Ver catálogo ↗</a>
+          <div class="heading-actions"><button class="btn primary" type="button" onclick="abrirEditorDiseno()">Añadir diseño</button><a class="btn ghost" href="index.html#catalogo" target="_blank">Ver catálogo ↗</a></div>
         </div>
         <div class="stats-grid">
           <article><small>Total</small><strong id="stat-total">24</strong></article>
@@ -81,6 +83,13 @@
           </div>
         </div>
         <div id="design-grid" class="design-grid"><p class="loading-copy">Cargando diseños…</p></div>
+      </section>
+
+      <section id="tab-categories" class="panel-section hidden">
+        <div class="panel-heading"><div><p class="eyebrow">Organización y premios</p><h1>Categorías y ruletas</h1><p>Crea categorías para el catálogo, decide cuáles aparecen en la ruleta y define el precio de cada sorteo.</p></div><button class="btn primary" type="button" onclick="anadirCategoria()">Añadir categoría</button></div>
+        <div class="roulette-settings"><label>Precio de la ruleta total<div><input id="global-roulette-price" type="number" min="0" max="10000" step="5"><span>€</span><button type="button" onclick="guardarPrecioRuletaTotal()">Guardar</button></div></label><p>La ruleta total solo incluye los diseños que tengan activada la opción “Ruleta total”.</p></div>
+        <div class="category-table-head"><span>Nombre</span><span>Identificador</span><span>Ruleta activa</span><span>Precio</span><span></span></div>
+        <div id="categories-list" class="categories-list"><p class="loading-copy">Cargando categorías…</p></div>
       </section>
 
       <section id="tab-users" class="panel-section hidden">
@@ -104,6 +113,24 @@
         </div>
       </section>
     </main>
+  </div>
+  <div id="design-modal" class="admin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="design-modal-title">
+    <form id="design-form" class="design-editor" onsubmit="guardarDiseno(event)">
+      <button class="points-close" type="button" onclick="cerrarEditorDiseno()" aria-label="Cerrar">×</button>
+      <p class="eyebrow">Editor de catálogo</p><h2 id="design-modal-title">Nuevo diseño</h2>
+      <input id="design-id" type="hidden">
+      <div class="editor-grid">
+        <label>Nombre<input id="design-name" type="text" maxlength="80" required></label>
+        <label>Categoría<select id="design-category" required onchange="actualizarEtiquetaRuletaCategoria()"></select></label>
+        <label>Precio<input id="design-price" type="number" min="0" max="10000" step="5" required></label>
+        <label>Estado<select id="design-status"><option value="disponible">Disponible</option><option value="vendido">Reservado</option></select></label>
+        <label class="span-2">URL o ruta de la imagen<input id="design-image-url" type="text" placeholder="https://… o img/archivo.png"></label>
+        <label class="span-2 file-field">O subir una imagen<input id="design-image-file" type="file" accept="image/jpeg,image/png,image/webp"></label>
+      </div>
+      <div class="raffle-options"><strong>Participación en sorteos</strong><label><input id="design-raffle-all" type="checkbox"> Puede salir en la ruleta total</label><label><input id="design-raffle-category" type="checkbox"> Puede salir en <span id="design-raffle-category-label">la ruleta de su categoría</span></label></div>
+      <div class="image-preview"><img id="design-image-preview" src="img/logo b.png" alt="Vista previa"></div>
+      <div class="design-editor-actions"><button id="design-delete" class="btn danger-button hidden" type="button" onclick="eliminarDisenoActual()">Eliminar diseño</button><span></span><button class="btn ghost" type="button" onclick="cerrarEditorDiseno()">Cancelar</button><button id="design-save" class="btn primary" type="submit">Guardar diseño</button></div>
+    </form>
   </div>
   <div id="points-modal" class="admin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="points-modal-title">
     <form class="points-card" onsubmit="guardarEdicionPuntos(event)">

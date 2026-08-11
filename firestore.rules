@@ -14,16 +14,9 @@ service cloud.firestore {
     function validRouletteUpdate() {
       let before = resource.data.get('ruleta', {});
       let after = request.resource.data.get('ruleta', {});
-      return after.keys().hasOnly(['all', 'marvel', 'anime', 'disney'])
-        && after.diff(before).affectedKeys().size() == 1
-        && (!before.keys().hasAny(['all']) || after.all == before.all)
-        && (!before.keys().hasAny(['marvel']) || after.marvel == before.marvel)
-        && (!before.keys().hasAny(['anime']) || after.anime == before.anime)
-        && (!before.keys().hasAny(['disney']) || after.disney == before.disney)
-        && (!after.keys().hasAny(['all']) || after.all.precio == 80)
-        && (!after.keys().hasAny(['marvel']) || after.marvel.precio == 100)
-        && (!after.keys().hasAny(['anime']) || after.anime.precio == 100)
-        && (!after.keys().hasAny(['disney']) || after.disney.precio == 100);
+      return after.diff(before).affectedKeys().size() == 1
+        && after.keys().hasAll(before.keys())
+        && after.keys().size() == before.keys().size() + 1;
     }
 
     match /usuarios/{uid} {
@@ -47,6 +40,16 @@ service cloud.firestore {
     }
 
     match /inventario/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /disenos/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /configuracion/{documentId} {
       allow read: if true;
       allow write: if isAdmin();
     }
