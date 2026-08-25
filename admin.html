@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=7">
+  <link rel="stylesheet" href="admin.css?v=8">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=8"></script>
+  <script defer src="admin.js?v=9"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -97,7 +97,7 @@
       </section>
 
       <section id="tab-users" class="panel-section hidden">
-        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona Jimmy Coins y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
+        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona JimmyCoins, registra el importe de cada sesión y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
         <div class="notice"><strong>Tu cuenta está protegida.</strong><span>No puedes retirarte tus propios permisos por accidente.</span></div>
         <label class="search wide"><span>⌕</span><input id="user-search" type="search" placeholder="Buscar por nombre o correo…" oninput="renderizarUsuarios()"></label>
         <div id="users-list" class="users-list"><p class="loading-copy">Cargando cuentas…</p></div>
@@ -154,11 +154,11 @@
     <form class="points-card" onsubmit="guardarEdicionPuntos(event)">
       <button class="points-close" type="button" onclick="cerrarEditorPuntos()" aria-label="Cerrar">×</button>
       <p class="eyebrow">Editar saldo</p>
-      <h2 id="points-modal-title">Jimmy Coins</h2>
+      <h2 id="points-modal-title">JimmyCoins</h2>
       <p id="points-user-label"></p>
-      <label for="points-input">Nuevo total de puntos</label>
+      <label for="points-input">Nuevo total de JimmyCoins</label>
       <input id="points-input" type="number" min="0" max="1000000" step="1" required inputmode="numeric">
-      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar puntos</button></div>
+      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar JimmyCoins</button></div>
     </form>
   </div>
   <div id="admin-toast" class="admin-toast" role="status" aria-live="polite"></div>

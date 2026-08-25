@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="brain.js?v=6"></script>
+  <script defer src="brain.js?v=7"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
@@ -25,6 +25,7 @@
     <nav class="main-nav" aria-label="Navegación principal">
       <a href="#catalogo">Diseños</a>
       <a href="#como-funciona">Cómo funciona</a>
+      <a href="#jimmycoins">JimmyCoins</a>
       <a href="#vista-videos">Vídeos</a>
       <button class="nav-link" type="button" onclick="cambiarVista('random')">Tinta al azar</button>
     </nav>
@@ -34,7 +35,7 @@
       <div id="user-info" class="user-chip hidden">
         <button type="button" onclick="abrirPerfil()" aria-label="Abrir mi perfil">
           <img id="user-pic" src="img/logo w.png" alt="">
-          <span><strong id="user-name">Mi cuenta</strong><small><b id="user-coins">0</b> coins</small></span>
+          <span><strong id="user-name">Mi cuenta</strong><small><b id="user-coins">0</b> JimmyCoins</small></span>
         </button>
       </div>
       <button id="btn-login" class="button button-small button-outline" type="button" onclick="loginGoogle()">Mi cuenta</button>
@@ -104,6 +105,44 @@
       </ol>
     </section>
 
+    <section id="jimmycoins" class="jimmy-section" aria-labelledby="jimmy-title">
+      <div class="jimmy-intro">
+        <p class="eyebrow light">Tu tinta también suma</p>
+        <span class="jc-coin jc-coin-large" aria-hidden="true">JC</span>
+        <h2 id="jimmy-title">Jimmy<em>Coins.</em></h2>
+        <p>Acumula JC con cada sesión y cámbialos por descuentos, regalos y nuevas oportunidades en el juego al azar.</p>
+        <div class="jimmy-steps">
+          <div><b>01</b><span><strong>Hazte tu tattoo</strong>Al terminar la sesión, Berbel añade tus JC según el importe pagado.</span></div>
+          <div><b>02</b><span><strong>Acumula en tu cuenta</strong>Tu saldo y tu progreso quedan vinculados a tu cuenta de Google.</span></div>
+          <div><b>03</b><span><strong>Canjea recompensas</strong>Habla con Berbel para canjearlas o usa 20 JC directamente para repetir la ruleta.</span></div>
+        </div>
+        <p class="jimmy-special"><strong>Semanas FM:</strong> podrás conseguir el doble de JC en plazos limitados y premios exclusivos para los primeros participantes.</p>
+      </div>
+      <div class="jimmy-details">
+        <div class="jimmy-panel">
+          <p class="eyebrow">JC por sesión</p><h3>Cuánto consigues</h3>
+          <div class="earning-table" role="table" aria-label="JimmyCoins obtenidos según el precio de la sesión">
+            <div class="earning-head" role="row"><span>Precio pagado</span><span>Recibes</span></div>
+            <div role="row"><span>Hasta 60 €</span><strong>10 JC</strong></div><div role="row"><span>70–90 €</span><strong>15 JC</strong></div>
+            <div role="row"><span>100–120 €</span><strong>20 JC</strong></div><div role="row"><span>130–160 €</span><strong>25 JC</strong></div>
+            <div role="row"><span>170–200 €</span><strong>30 JC</strong></div><div role="row"><span>210–250 €</span><strong>35 JC</strong></div>
+            <div role="row"><span>260–300 €</span><strong>40 JC</strong></div><div role="row"><span>310–390 €</span><strong>50 JC</strong></div>
+            <div role="row"><span>400 € o más</span><strong>60 JC</strong></div>
+          </div>
+        </div>
+        <div class="jimmy-panel rewards-panel">
+          <p class="eyebrow">Premios</p><h3>Todo lo que desbloqueas</h3>
+          <div class="reward-list">
+            <div><b>20 JC</b><span>Nueva tirada en el juego al azar</span></div><div><b>30 JC</b><span>5 € de descuento en tattoos de más de 70 €</span></div>
+            <div><b>40 JC</b><span>Lámina exclusiva gratis</span></div><div><b>50 JC</b><span>20 € de descuento en tattoos de más de 150 €</span></div>
+            <div><b>60 JC</b><span>30 € de descuento en tattoos de más de 200 €</span></div><div class="featured"><b>75 JC</b><span>Mini tattoo gratis</span></div>
+            <div><b>90 JC</b><span>Flash gratis o Mystery Box valorada entre 50 y 100 €</span></div><div class="featured"><b>100 JC</b><span>Jimmy Ruleta</span></div>
+            <div><b>150 JC</b><span>50 € de descuento en tattoos de más de 250 €</span></div><div class="featured"><b>200 JC</b><span>Jimmy Jackpot: 100 € de descuento (+300 €) o mini gratis + 50 € de descuento</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="vista-random" class="random-section" aria-labelledby="random-title">
       <div class="random-copy">
         <p class="eyebrow">Para quienes se atreven</p>
@@ -137,6 +176,7 @@
           <small>Tu pieza es</small><h3 id="res-nombre">Nombre</h3>
           <img id="res-img" src="" alt="Diseño elegido por la ruleta">
           <div class="result-meta"><strong id="res-precio">80 €</strong><span>Código: <b id="res-pass">—</b></span></div>
+          <button id="btn-reroll" class="button jimmy-reroll hidden" type="button" onclick="canjearNuevaTirada()"><span class="jc-coin" aria-hidden="true">JC</span><span>Nueva tirada · 20 JimmyCoins</span></button>
           <div class="result-actions"><button class="button button-outline" type="button" onclick="volverMenuRandom()">Volver</button><button id="btn-res-claim" class="button button-solid" type="button">Reservar</button></div>
         </div>
       </div>
@@ -179,7 +219,7 @@
       <button class="modal-close" type="button" onclick="cerrarModal('modal-perfil')" aria-label="Cerrar">×</button>
       <img id="perfil-modal-pic" src="img/logo w.png" alt="Foto de perfil">
       <h2 id="perfil-modal-nombre">Mi cuenta</h2><p id="perfil-modal-email"></p>
-      <div class="wallet"><small>Tu saldo</small><strong><span id="perfil-modal-coins">0</span> coins</strong><div><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 400 para tu descuento</p></div>
+      <div class="wallet"><small>🪙 TUS JIMMYCOINS</small><strong><span class="jc-coin" aria-hidden="true">JC</span><span id="perfil-modal-coins">0</span> JimmyCoins</strong><p class="wallet-next-label">PRÓXIMA RECOMPENSA</p><h3 id="perfil-proxima-recompensa">Mini tattoo gratis</h3><p id="perfil-recompensa-necesaria">75 JC necesarios</p><div class="wallet-progress" role="progressbar" aria-label="Progreso hacia la próxima recompensa"><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 75</p></div>
       <button class="button button-outline full" type="button" onclick="logoutGoogle()">Cerrar sesión</button>
     </div>
   </div>

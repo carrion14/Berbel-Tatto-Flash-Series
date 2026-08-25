@@ -19,6 +19,17 @@ service cloud.firestore {
         && after.keys().size() == before.keys().size() + 1;
     }
 
+    function validPaidReroll() {
+      let before = resource.data.get('ruleta', {});
+      let after = request.resource.data.get('ruleta', {});
+      return resource.data.get('jimmyCoins', 0) >= 20
+        && request.resource.data.jimmyCoins == resource.data.jimmyCoins - 20
+        && request.resource.data.jimmyCoins >= 0
+        && after.diff(before).affectedKeys().size() == 1
+        && after.keys().hasAll(before.keys())
+        && before.keys().hasAll(after.keys());
+    }
+
     match /usuarios/{uid} {
       allow create: if signedIn()
         && request.auth.uid == uid
@@ -27,13 +38,16 @@ service cloud.firestore {
 
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
 
-      // El cliente solo puede guardar su propio resultado de la ruleta.
-      // Coins, precios, reservas y permisos quedan en manos de administradores.
+      // El cliente puede guardar su primer premio o pagar exactamente 20 JC
+      // para sustituir un único resultado ya existente.
       allow update: if isAdmin() || (
         signedIn()
         && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ruleta'])
-        && validRouletteUpdate()
+        && (
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ruleta']) && validRouletteUpdate())
+          ||
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ruleta', 'jimmyCoins']) && validPaidReroll())
+        )
       );
 
       allow delete: if isAdmin();

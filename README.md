@@ -8,7 +8,7 @@ Web de catálogo y reservas de Berbel Tattoo.
 - Inventario y precios sincronizados con Firebase.
 - Reservas mediante un mensaje preparado para Instagram.
 - Ruleta persistente: cada premio queda vinculado a la cuenta de Google.
-- Sistema de Jimmy Coins.
+- Sistema de JimmyCoins.
 - Panel privado para crear, editar y eliminar diseños, subir imágenes, gestionar categorías, configurar ruletas, precios, reservas, cuentas y vídeos.
 
 ## Archivos principales
