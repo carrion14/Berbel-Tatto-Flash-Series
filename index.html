@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -30,7 +30,6 @@
       <a href="#vista-videos">Vídeos</a>
     </nav>
     <div class="header-actions">
-      <a class="mobile-video-link" href="#vista-videos">Vídeos ↓</a>
       <a id="admin-link" class="admin-link hidden" href="admin.html" aria-label="Abrir panel de administración">Admin</a>
       <div id="user-info" class="user-chip hidden">
         <button type="button" onclick="abrirPerfil()" aria-label="Abrir mi perfil">
@@ -42,6 +41,13 @@
       <a class="button button-small button-solid desktop-cta" href="https://www.instagram.com/rberbeltattoo/" target="_blank" rel="noopener">Contactar <span>↗</span></a>
     </div>
   </header>
+  <nav class="mobile-nav" aria-label="Navegación móvil">
+    <a href="#catalogo">Diseños</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#jimmycoins">JimmyCoins</a>
+    <button type="button" onclick="cambiarVista('random')">Tinta al azar</button>
+    <a href="#vista-videos">Vídeos</a>
+  </nav>
 
   <main>
     <section class="hero" id="inicio">
