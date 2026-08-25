@@ -13,7 +13,7 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="brain.js?v=8"></script>
+  <script defer src="brain.js?v=9"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
@@ -210,6 +210,7 @@
       <img id="perfil-modal-pic" src="img/logo w.png" alt="Foto de perfil">
       <h2 id="perfil-modal-nombre">Mi cuenta</h2><p id="perfil-modal-email"></p>
       <div class="wallet"><small>🪙 TUS JIMMYCOINS</small><strong><span class="jc-coin" aria-hidden="true">JC</span><span id="perfil-modal-coins">0</span> JimmyCoins</strong><p class="wallet-next-label">PRÓXIMA RECOMPENSA</p><h3 id="perfil-proxima-recompensa">Mini tattoo gratis</h3><p id="perfil-recompensa-necesaria">75 JC necesarios</p><div class="wallet-progress" role="progressbar" aria-label="Progreso hacia la próxima recompensa"><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 75</p></div>
+      <button class="button button-solid full" type="button" onclick="cambiarCuentaGoogle()">Usar otra cuenta de Google</button>
       <button class="button button-outline full" type="button" onclick="logoutGoogle()">Cerrar sesión</button>
     </div>
   </div>
