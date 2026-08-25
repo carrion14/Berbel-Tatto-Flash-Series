@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -119,19 +119,9 @@
         <p class="jimmy-special"><strong>Semanas FM:</strong> podrás conseguir el doble de JC en plazos limitados y premios exclusivos para los primeros participantes.</p>
       </div>
       <div class="jimmy-details">
-        <div class="jimmy-panel">
-          <p class="eyebrow">JC por sesión</p><h3>Cuánto consigues</h3>
-          <div class="earning-table" role="table" aria-label="JimmyCoins obtenidos según el precio de la sesión">
-            <div class="earning-head" role="row"><span>Precio pagado</span><span>Recibes</span></div>
-            <div role="row"><span>Hasta 60 €</span><strong>10 JC</strong></div><div role="row"><span>70–90 €</span><strong>15 JC</strong></div>
-            <div role="row"><span>100–120 €</span><strong>20 JC</strong></div><div role="row"><span>130–160 €</span><strong>25 JC</strong></div>
-            <div role="row"><span>170–200 €</span><strong>30 JC</strong></div><div role="row"><span>210–250 €</span><strong>35 JC</strong></div>
-            <div role="row"><span>260–300 €</span><strong>40 JC</strong></div><div role="row"><span>310–390 €</span><strong>50 JC</strong></div>
-            <div role="row"><span>400 € o más</span><strong>60 JC</strong></div>
-          </div>
-        </div>
         <div class="jimmy-panel rewards-panel">
           <p class="eyebrow">Premios</p><h3>Todo lo que desbloqueas</h3>
+          <button class="button button-outline jimmy-table-button" type="button" onclick="document.getElementById('modal-jimmy-tabla').classList.remove('hidden')">Ver tabla de JimmyCoins <span>→</span></button>
           <div class="reward-list">
             <div><b>20 JC</b><span>Nueva tirada en el juego al azar</span></div><div><b>30 JC</b><span>5 € de descuento en tattoos de más de 70 €</span></div>
             <div><b>40 JC</b><span>Lámina exclusiva gratis</span></div><div><b>50 JC</b><span>20 € de descuento en tattoos de más de 150 €</span></div>
@@ -221,6 +211,23 @@
       <h2 id="perfil-modal-nombre">Mi cuenta</h2><p id="perfil-modal-email"></p>
       <div class="wallet"><small>🪙 TUS JIMMYCOINS</small><strong><span class="jc-coin" aria-hidden="true">JC</span><span id="perfil-modal-coins">0</span> JimmyCoins</strong><p class="wallet-next-label">PRÓXIMA RECOMPENSA</p><h3 id="perfil-proxima-recompensa">Mini tattoo gratis</h3><p id="perfil-recompensa-necesaria">75 JC necesarios</p><div class="wallet-progress" role="progressbar" aria-label="Progreso hacia la próxima recompensa"><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 75</p></div>
       <button class="button button-outline full" type="button" onclick="logoutGoogle()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div id="modal-jimmy-tabla" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="jimmy-tabla-title">
+    <div class="modal-card jimmy-table-card">
+      <button class="modal-close" type="button" onclick="cerrarModal('modal-jimmy-tabla')" aria-label="Cerrar tabla">×</button>
+      <p class="eyebrow">JC por sesión</p>
+      <h2 id="jimmy-tabla-title">Cuánto consigues</h2>
+      <p>Los JimmyCoins se calculan según el importe pagado en tu sesión.</p>
+      <div class="earning-table" role="table" aria-label="JimmyCoins obtenidos según el precio de la sesión">
+        <div class="earning-head" role="row"><span>Precio pagado</span><span>Recibes</span></div>
+        <div role="row"><span>Hasta 60 €</span><strong>10 JC</strong></div><div role="row"><span>70–90 €</span><strong>15 JC</strong></div>
+        <div role="row"><span>100–120 €</span><strong>20 JC</strong></div><div role="row"><span>130–160 €</span><strong>25 JC</strong></div>
+        <div role="row"><span>170–200 €</span><strong>30 JC</strong></div><div role="row"><span>210–250 €</span><strong>35 JC</strong></div>
+        <div role="row"><span>260–300 €</span><strong>40 JC</strong></div><div role="row"><span>310–390 €</span><strong>50 JC</strong></div>
+        <div role="row"><span>400 € o más</span><strong>60 JC</strong></div>
+      </div>
     </div>
   </div>
 
