@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=8">
+  <link rel="stylesheet" href="admin.css?v=9">
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=10"></script>
+  <script defer src="admin.js?v=11"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -97,7 +97,7 @@
       </section>
 
       <section id="tab-users" class="panel-section hidden">
-        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona JimmyCoins, registra el importe de cada sesión y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
+        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona Jimmy Yems, registra el importe de cada sesión y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
         <div class="notice"><strong>Tu cuenta está protegida.</strong><span>No puedes retirarte tus propios permisos por accidente.</span></div>
         <label class="search wide"><span>⌕</span><input id="user-search" type="search" placeholder="Buscar por nombre o correo…" oninput="renderizarUsuarios()"></label>
         <div id="users-list" class="users-list"><p class="loading-copy">Cargando cuentas…</p></div>
@@ -107,11 +107,11 @@
         <div class="panel-heading"><div><p class="eyebrow">Contenido del estudio</p><h1>Vídeos</h1><p>Publica procesos y resultados que aparecerán en la web.</p></div></div>
         <div class="video-layout">
           <form id="video-form" class="editor-card" onsubmit="guardarVideo(event)">
-            <h2>Nuevo vídeo</h2>
+            <h2 id="video-form-title">Nuevo vídeo</h2>
             <label>Enlace de Instagram, YouTube, imagen o MP4<input id="video-url" type="url" required placeholder="https://www.instagram.com/reel/…"><small class="field-help">En Instagram copia el enlace de una publicación o reel público, no la dirección temporal de la foto.</small></label>
             <label>Título<input id="video-title" type="text" maxlength="80" required placeholder="Proceso de tatuaje"></label>
             <label>Descripción<textarea id="video-description" maxlength="240" placeholder="Una descripción breve…"></textarea></label>
-            <button id="video-submit" class="btn primary full" type="submit">Publicar vídeo</button>
+            <div class="video-form-actions"><button id="video-cancel" class="btn ghost hidden" type="button" onclick="cancelarEdicionVideo()">Cancelar</button><button id="video-submit" class="btn primary" type="submit">Publicar vídeo</button></div>
           </form>
           <div><h2 class="list-title">Publicados</h2><div id="videos-list" class="videos-list"><p class="loading-copy">Cargando vídeos…</p></div></div>
         </div>
@@ -154,11 +154,11 @@
     <form class="points-card" onsubmit="guardarEdicionPuntos(event)">
       <button class="points-close" type="button" onclick="cerrarEditorPuntos()" aria-label="Cerrar">×</button>
       <p class="eyebrow">Editar saldo</p>
-      <h2 id="points-modal-title">JimmyCoins</h2>
+      <h2 id="points-modal-title">Jimmy Yems</h2>
       <p id="points-user-label"></p>
-      <label for="points-input">Nuevo total de JimmyCoins</label>
+      <label for="points-input">Nuevo total de Jimmy Yems</label>
       <input id="points-input" type="number" min="0" max="1000000" step="1" required inputmode="numeric">
-      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar JimmyCoins</button></div>
+      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar Jimmy Yems</button></div>
     </form>
   </div>
   <div id="admin-toast" class="admin-toast" role="status" aria-live="polite"></div>
