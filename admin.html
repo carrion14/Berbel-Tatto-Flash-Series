@@ -13,7 +13,7 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <script defer src="admin.js?v=11"></script>
+  <script defer src="admin.js?v=12"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
@@ -97,7 +97,7 @@
       </section>
 
       <section id="tab-users" class="panel-section hidden">
-        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona Jimmy Yems, registra el importe de cada sesión y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
+        <div class="panel-heading"><div><p class="eyebrow">Accesos y fidelización</p><h1>Cuentas</h1><p>Gestiona Jimmy Yens, registra el importe de cada sesión y decide qué cuentas de Google pueden entrar en este panel.</p></div></div>
         <div class="notice"><strong>Tu cuenta está protegida.</strong><span>No puedes retirarte tus propios permisos por accidente.</span></div>
         <label class="search wide"><span>⌕</span><input id="user-search" type="search" placeholder="Buscar por nombre o correo…" oninput="renderizarUsuarios()"></label>
         <div id="users-list" class="users-list"><p class="loading-copy">Cargando cuentas…</p></div>
@@ -154,11 +154,11 @@
     <form class="points-card" onsubmit="guardarEdicionPuntos(event)">
       <button class="points-close" type="button" onclick="cerrarEditorPuntos()" aria-label="Cerrar">×</button>
       <p class="eyebrow">Editar saldo</p>
-      <h2 id="points-modal-title">Jimmy Yems</h2>
+      <h2 id="points-modal-title">Jimmy Yens</h2>
       <p id="points-user-label"></p>
-      <label for="points-input">Nuevo total de Jimmy Yems</label>
+      <label for="points-input">Nuevo total de Jimmy Yens</label>
       <input id="points-input" type="number" min="0" max="1000000" step="1" required inputmode="numeric">
-      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar Jimmy Yems</button></div>
+      <div class="points-actions"><button class="btn ghost" type="button" onclick="cerrarEditorPuntos()">Cancelar</button><button id="points-save" class="btn primary" type="submit">Guardar Jimmy Yens</button></div>
     </form>
   </div>
   <div id="admin-toast" class="admin-toast" role="status" aria-live="polite"></div>

@@ -13,7 +13,7 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="brain.js?v=10"></script>
+  <script defer src="brain.js?v=11"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
@@ -25,7 +25,7 @@
     <nav class="main-nav" aria-label="Navegación principal">
       <a href="#catalogo">Diseños</a>
       <a href="#como-funciona">Cómo funciona</a>
-      <a href="#jimmycoins">Jimmy Yems</a>
+      <a href="#jimmycoins">Jimmy Yens</a>
       <button class="nav-link" type="button" onclick="cambiarVista('random')">Tinta al azar</button>
       <a href="#vista-videos">Vídeos</a>
     </nav>
@@ -35,7 +35,7 @@
       <div id="user-info" class="user-chip hidden">
         <button type="button" onclick="abrirPerfil()" aria-label="Abrir mi perfil">
           <img id="user-pic" src="img/logo w.png" alt="">
-          <span><strong id="user-name">Mi cuenta</strong><small><b id="user-coins">0</b> Jimmy Yems</small></span>
+          <span><strong id="user-name">Mi cuenta</strong><small><b id="user-coins">0</b> Jimmy Yens</small></span>
         </button>
       </div>
       <button id="btn-login" class="button button-small button-outline" type="button" onclick="loginGoogle()">Mi cuenta</button>
@@ -109,7 +109,7 @@
       <div class="jimmy-intro">
         <p class="eyebrow light">Tu tinta también suma</p>
         <span class="jc-coin jc-coin-large" aria-hidden="true">JY</span>
-        <h2 id="jimmy-title">Jimmy<em>Yems.</em></h2>
+        <h2 id="jimmy-title">Jimmy<em>Yens.</em></h2>
         <p>Acumula JY con cada sesión y cámbialos por descuentos, regalos y nuevas oportunidades en el juego al azar.</p>
         <div class="jimmy-steps">
           <div><b>01</b><span><strong>Hazte tu tattoo</strong>Al terminar la sesión, Berbel añade tus JY según el importe pagado.</span></div>
@@ -121,7 +121,7 @@
       <div class="jimmy-details">
         <div class="jimmy-panel rewards-panel">
           <p class="eyebrow">Premios</p><h3>Todo lo que desbloqueas</h3>
-          <button class="button button-outline jimmy-table-button" type="button" onclick="document.getElementById('modal-jimmy-tabla').classList.remove('hidden')">Ver tabla de Jimmy Yems <span>→</span></button>
+          <button class="button button-outline jimmy-table-button" type="button" onclick="document.getElementById('modal-jimmy-tabla').classList.remove('hidden')">Ver tabla de Jimmy Yens <span>→</span></button>
           <div class="reward-list">
             <div><b>20 JY</b><span>Nueva tirada en el juego al azar</span></div><div><b>30 JY</b><span>5 € de descuento en tattoos de más de 70 €</span></div>
             <div><b>40 JY</b><span>Lámina exclusiva gratis</span></div><div><b>50 JY</b><span>20 € de descuento en tattoos de más de 150 €</span></div>
@@ -166,7 +166,7 @@
           <small>Tu pieza es</small><h3 id="res-nombre">Nombre</h3>
           <img id="res-img" src="" alt="Diseño elegido por la ruleta">
           <div class="result-meta"><strong id="res-precio">80 €</strong><span>Código: <b id="res-pass">—</b></span></div>
-          <button id="btn-reroll" class="button jimmy-reroll hidden" type="button" onclick="canjearNuevaTirada()"><span class="jc-coin" aria-hidden="true">JY</span><span>Nueva tirada · 20 Jimmy Yems</span></button>
+          <button id="btn-reroll" class="button jimmy-reroll hidden" type="button" onclick="canjearNuevaTirada()"><span class="jc-coin" aria-hidden="true">JY</span><span>Nueva tirada · 20 Jimmy Yens</span></button>
           <div class="result-actions"><button class="button button-outline" type="button" onclick="volverMenuRandom()">Volver</button><button id="btn-res-claim" class="button button-solid" type="button">Reservar</button></div>
         </div>
       </div>
@@ -209,7 +209,7 @@
       <button class="modal-close" type="button" onclick="cerrarModal('modal-perfil')" aria-label="Cerrar">×</button>
       <img id="perfil-modal-pic" src="img/logo w.png" alt="Foto de perfil">
       <h2 id="perfil-modal-nombre">Mi cuenta</h2><p id="perfil-modal-email"></p>
-      <div class="wallet"><small>🪙 TUS JIMMY YEMS</small><strong><span class="jc-coin" aria-hidden="true">JY</span><span id="perfil-modal-coins">0</span> Jimmy Yems</strong><p class="wallet-next-label">PRÓXIMA RECOMPENSA</p><h3 id="perfil-proxima-recompensa">Mini tattoo gratis</h3><p id="perfil-recompensa-necesaria">75 JY necesarios</p><div class="wallet-progress" role="progressbar" aria-label="Progreso hacia la próxima recompensa"><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 75</p></div>
+      <div class="wallet"><small>🪙 TUS JIMMY YENS</small><strong><span class="jc-coin" aria-hidden="true">JY</span><span id="perfil-modal-coins">0</span> Jimmy Yens</strong><p class="wallet-next-label">PRÓXIMA RECOMPENSA</p><h3 id="perfil-proxima-recompensa">Mini tattoo gratis</h3><p id="perfil-recompensa-necesaria">75 JY necesarios</p><div class="wallet-progress" role="progressbar" aria-label="Progreso hacia la próxima recompensa"><i id="perfil-barra"></i></div><p id="perfil-progreso-texto">0 / 75</p></div>
       <button class="button button-solid full" type="button" onclick="cambiarCuentaGoogle()">Usar otra cuenta de Google</button>
       <button class="button button-outline full" type="button" onclick="logoutGoogle()">Cerrar sesión</button>
     </div>
@@ -220,8 +220,8 @@
       <button class="modal-close" type="button" onclick="cerrarModal('modal-jimmy-tabla')" aria-label="Cerrar tabla">×</button>
       <p class="eyebrow">JY por sesión</p>
       <h2 id="jimmy-tabla-title">Cuánto consigues</h2>
-      <p>Los Jimmy Yems se calculan según el importe pagado en tu sesión.</p>
-      <div class="earning-table" role="table" aria-label="Jimmy Yems obtenidos según el precio de la sesión">
+      <p>Los Jimmy Yens se calculan según el importe pagado en tu sesión.</p>
+      <div class="earning-table" role="table" aria-label="Jimmy Yens obtenidos según el precio de la sesión">
         <div class="earning-head" role="row"><span>Precio pagado</span><span>Recibes</span></div>
         <div role="row"><span>Hasta 60 €</span><strong>10 JY</strong></div><div role="row"><span>70–90 €</span><strong>15 JY</strong></div>
         <div role="row"><span>100–120 €</span><strong>20 JY</strong></div><div role="row"><span>130–160 €</span><strong>25 JY</strong></div>
